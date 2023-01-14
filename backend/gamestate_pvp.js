@@ -123,6 +123,7 @@ export class PVPGameState extends GameState {
           x > this.maze.vert.length - 1 - this.shrinkValue
         ) {
           this.lives[socketId] = 0;
+          console.log(`${socketId} killed by shrink (x)`);
           this.changedLives = true;
         }
         if (
@@ -130,6 +131,7 @@ export class PVPGameState extends GameState {
           y > this.maze.vert.length - 1 - this.shrinkValue
         ) {
           this.lives[socketId] = 0;
+          console.log(`${socketId} killed by shrink (y)`);
           this.changedLives = true;
         }
       });
