@@ -94,7 +94,7 @@ class Handler {
     socket.on('playerLocations', (data) {
       print(data);
       packetCache = packetCache
-          .where((p) => ((p["packetNumber"] ?? 0) > data.packetNumber))
+          .where((p) => ((p["packetNumber"] ?? 0) > data['packetNumber']))
           .toList();
 
       serverTicks = data['serverTicks'];
