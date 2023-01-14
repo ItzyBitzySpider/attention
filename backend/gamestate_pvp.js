@@ -138,6 +138,11 @@ export class PVPGameState extends GameState {
         playersLeft,
       });
 
+      Object.entries(this.lives).filter(([socketId, live]) => {
+        if (live <= 0 && this.locations[socketId])
+          delete this.locations[socketId];
+      });
+
       if (playersLeft <= 1) this.endGame();
 
       this.changedLives = false;
