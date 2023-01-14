@@ -1,0 +1,30 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - backend/**
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            ls
+            cd /home/yuna/attention
+            git checkout main
+            # Pull from git repo
+            git pull
+            # Backend CD
+            killall node || true # Force return true so exit code is not 1
+            yarn prod
+            
