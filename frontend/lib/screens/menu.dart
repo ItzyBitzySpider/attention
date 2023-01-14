@@ -1,6 +1,6 @@
 import 'package:attention_game/colors.dart';
-import 'package:attention_game/gameplay/gamemodes.dart';
-import 'package:attention_game/screens/game.dart';
+import 'package:attention_game/game/common.dart';
+import 'package:attention_game/screens/lobby.dart';
 import 'package:attention_game/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -107,7 +107,7 @@ class _MenuState extends State<Menu> {
       onPressed: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const Game(gamemode: GameMode.pvp),
+          builder: (context) => const Lobby(gamemode: GameMode.pvp),
         ),
       ),
     );
@@ -120,7 +120,7 @@ class _MenuState extends State<Menu> {
       onPressed: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const Game(gamemode: GameMode.escape),
+          builder: (context) => const Lobby(gamemode: GameMode.escape),
         ),
       ),
     );
