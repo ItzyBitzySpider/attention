@@ -86,12 +86,12 @@ export function createGame(roomId) {
 }
 
 export function startGameListeners(socket) {
-  socket.on("startGame", ({}, callback) => {
+  socket.on("startGame", () => {
     Array.from(socket.rooms).forEach((roomId) => {
       if (roomId === socket.id) return;
       global.gameStates[roomId].startGame();
       const maze = global.gameStates[roomId].maze;
-      callback([maze.horiz, maze.vert]);
+      global.io.to(roomId).emit("maze", [maze.horiz, maze.vert]);
     });
   });
 
