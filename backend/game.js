@@ -46,7 +46,16 @@ export class GameState {
 
   processInput(socketId, serverTicks, newInput, packetNum) {
     //Void input if latency from client too high
-    if (serverTicks < this.stateCache[0].serverTicks) return;
+    if (this.stateCache[0] && serverTicks < this.stateCache[0].serverTicks) {
+      console.warn(
+        "Rejected",
+        socketId,
+        serverTicks,
+        this.stateCache[0].serverTicks,
+        packetNum
+      );
+      return;
+    }
 
     if ((1 << 0) & newInput) {
       this.locations[socketId][0] -= 50;
