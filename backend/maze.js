@@ -1,42 +1,80 @@
-export class Maze {
-  constructor(hgt, wid) {
-    this.hgt = hgt;
-    this.wid = wid;
-    this.horiz = Array.from({ length: hgt + 1 }, (_) => Array(wid).fill(true));
-    this.vert = Array.from({ length: hgt }, (_) => Array(wid + 1).fill(true));
+class Maze {
+  constructor(sizes, space) {
+    this.horiz = [[true], [true]];
+    this.vert = [[true, true]];
+    for (let cur = 1, next; sizes.length > 0; cur = next) {
+      next = sizes.pop();
+      this.expand(cur, next, space);
+      this.loops(cur, next, space);
+    }
   }
-  generate() {
-    let visited = Array.from({ length: this.hgt }, (_) =>
-      Array(this.wid).fill(false)
+  expand(cur, next, space) {
+    let shift = (next - cur) / 2,
+      stack = [];
+    for (let i = 0; i < cur; i++) {
+      if (i > 0 && Math.random() > space) continue;
+      this.horiz[0][i] =
+        this.horiz[cur][i] =
+        this.vert[i][0] =
+        this.vert[i][cur] =
+          false;
+      stack.push(
+        [shift - 1, shift + i],
+        [shift + cur, shift + i],
+        [shift + i, shift - 1],
+        [shift + i, shift + cur]
+      );
+    }
+    let visited = Array.from({ length: next }, (_, y) =>
+      Array.from(
+        { length: next },
+        (_, x) => x >= shift && x < shift + cur && y >= shift && y < shift + cur
+      )
     );
-    let unvisited = this.hgt * this.wid - 1,
-      curX = 0,
-      curY = 0,
-      stack = [[0, 0]];
-    visited[0][0] = true;
-    while (unvisited > 0) {
-      let ngh = [];
-      if (curY - 1 >= 0 && !visited[curY - 1][curX])
-        ngh.push(["u", curX, curY - 1]);
-      if (curY + 1 < this.hgt && !visited[curY + 1][curX])
-        ngh.push(["d", curX, curY + 1]);
-      if (curX - 1 >= 0 && !visited[curY][curX - 1])
-        ngh.push(["l", curX - 1, curY]);
-      if (curX + 1 < this.wid && !visited[curY][curX + 1])
-        ngh.push(["r", curX + 1, curY]);
-      if (ngh.length > 0) {
-        let chosen = ngh[Math.floor(Math.random() * ngh.length)];
-        if (chosen[0] == "u") this.horiz[curY][curX] = false;
-        if (chosen[0] == "d") this.horiz[curY + 1][curX] = false;
-        if (chosen[0] == "l") this.vert[curY][curX] = false;
-        if (chosen[0] == "r") this.vert[curY][curX + 1] = false;
-        stack.push([curX, curY]);
-        [curX, curY] = [chosen[1], chosen[2]];
-        visited[curY][curX] = true;
-        unvisited--;
+    for (let cell of stack) visited[cell[1]][cell[0]] = true;
+    this.horiz = Array.from({ length: next + 1 }, (_, y) =>
+      Array.from(
+        { length: next },
+        (_, x) =>
+          x < shift ||
+          x >= shift + cur ||
+          y < shift ||
+          y > shift + cur ||
+          this.horiz[y - shift][x - shift]
+      )
+    );
+    this.vert = Array.from({ length: next }, (_, y) =>
+      Array.from(
+        { length: next + 1 },
+        (_, x) =>
+          x < shift ||
+          x > shift + cur ||
+          y < shift ||
+          y >= shift + cur ||
+          this.vert[y - shift][x - shift]
+      )
+    );
+    while (stack.length > 0) {
+      let [x, y] = stack[stack.length - 1],
+        nghbrs = [];
+      if (y > 0 && !visited[y - 1][x]) nghbrs.push(["u", x, y - 1]);
+      if (y < next - 1 && !visited[y + 1][x]) nghbrs.push(["d", x, y + 1]);
+      if (x > 0 && !visited[y][x - 1]) nghbrs.push(["l", x - 1, y]);
+      if (x < next - 1 && !visited[y][x + 1]) nghbrs.push(["r", x + 1, y]);
+      if (nghbrs.length > 0) {
+        let [dir, nx, ny] = nghbrs[Math.floor(Math.random() * nghbrs.length)];
+        if (dir == "u") this.horiz[y][x] = false;
+        if (dir == "d") this.horiz[y + 1][x] = false;
+        if (dir == "l") this.vert[y][x] = false;
+        if (dir == "r") this.vert[y][x + 1] = false;
+        stack.push([nx, ny]);
+        visited[ny][nx] = true;
       } else if (stack.length > 0) {
-        [curX, curY] = stack.pop();
+        stack.pop();
       }
     }
+  }
+  loops(cur, next, space) {
+    let shift = (next - cur) / 2;
   }
 }

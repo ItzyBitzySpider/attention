@@ -21,7 +21,10 @@ export class GameState {
     this.serverTicks = 0;
     this.loop = new Loop(() => this.updatePositions(), LOOP_FPS);
 
-    this.maze = new Maze(mazeSize, mazeSize);
+    this.maze = new Maze(
+      [mazeSize, mazeSize - 2, , mazeSize - 4, , mazeSize - 6, mazeSize - 8],
+      0.3
+    );
     this.mazeBounds = [
       [0, mazeSize - 1],
       [0, mazeSize - 1],
