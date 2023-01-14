@@ -92,19 +92,6 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     addAll(mazeWalls);
   }
 
-  void drawEnemy(int positionX, int positionY) {
-    removeAll(enemies);
-    enemies = [];
-
-    if ((positionX - player.positionX).abs() < 2 &&
-        (positionY - player.positionY).abs() < 2) {
-      enemies.add(Enemy(
-          mazeHelper: mazeHelper, positionX: positionX, positionY: positionY));
-    }
-
-    addAll(enemies);
-  }
-
   void spawnPlayer(int positionX, int positionY) {
     player = Player(
       mazeHelper: mazeHelper,
@@ -155,43 +142,71 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     shrinkExtent++;
   }
 
-  void spawnPickup(int positionX, int positionY) {
-    KeyPickup key = KeyPickup(
-      mazeHelper: mazeHelper,
-      positionX: positionX,
-      positionY: positionY,
-    );
+  void drawEnemies() {
+    removeAll(enemies);
+    enemies = [];
 
-    pickups.add(key);
-    add(key);
+    Handler.locations.forEach((key, value) {
+      if (getSocket().id != key) {
+        int positionX = value[0];
+        int positionY = value[1];
+
+        if ((positionX - player.positionX).abs() < 2 &&
+            (positionY - player.positionY).abs() < 2) {
+          enemies.add(Enemy(
+              mazeHelper: mazeHelper,
+              positionX: positionX,
+              positionY: positionY));
+        }
+      }
+    });
+
+    addAll(enemies);
   }
 
-  void spawnHeart(int positionX, int positionY) {
-    HeartPickup heart = HeartPickup(
-      mazeHelper: mazeHelper,
-      positionX: positionX,
-      positionY: positionY,
-    );
+  // void drawKeys() {
+  //   removeAll(pickups);
+  //   pickups = [];
 
-    pickups.add(heart);
-    add(heart);
-  }
+  //   for (final p in Handler.keys) {
+  //     int positionX = p[0];
+  //     int positionY = p[1];
 
-  void removePickup(int positionX, int positionY) {
-    for (int i = 0; i < pickups.length; i++) {
-      if (pickups[i].positionX == positionX &&
-          pickups[i].positionY == positionY) {
-        remove(pickups[i]);
-        pickups.removeAt(i);
-        break;
+  //       if ((positionX - player.positionX).abs() < 2 &&
+  //           (positionY - player.positionY).abs() < 2) {
+  //         pickups.add(KeyPickup(
+  //             mazeHelper: mazeHelper,
+  //             positionX: positionX,
+  //             positionY: positionY));
+  //       }
+  //   }
+
+  //   addAll(pickups);
+  // }
+
+  void drawHearts() {
+    removeAll(pickups);
+    pickups = [];
+
+    for (final p in Handler.hearts) {
+      int positionX = p[0];
+      int positionY = p[1];
+
+      if ((positionX - player.positionX).abs() < 2 &&
+          (positionY - player.positionY).abs() < 2) {
+        pickups.add(HeartPickup(
+            mazeHelper: mazeHelper,
+            positionX: positionX,
+            positionY: positionY));
       }
     }
+
+    addAll(pickups);
   }
 
   @override
   Future<void> onLoad() async {
     await Future.delayed(Duration(seconds: 1));
-    print('teststring');
     double screenSize = min(size.x, size.y);
     //cast to bool;
     mazeHelper = MazeHelper(
@@ -201,8 +216,6 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     );
 
     spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
-    spawnHeart(0, 1);
-    spawnHeart(5, 1);
   }
 
   @override
@@ -210,10 +223,8 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     super.update(dt);
     drawWalls(player.positionX, player.positionY);
     // iterate map
-    Handler.locations.forEach((key, value) {
-      if (getSocket().id != key) drawEnemy(value[0], value[1]);
-    });
 
-    removePickup(player.positionX, player.positionY);
+    drawEnemies();
+    drawHearts();
   }
 }

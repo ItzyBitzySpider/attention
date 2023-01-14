@@ -24,15 +24,25 @@ class DangerZone extends RectangleComponent {
 class VerticalDangerZone extends DangerZone {
   VerticalDangerZone({
     required MazeHelper mazeHelper,
-    required int shrinkExtent,
+    required double length,
     required Vector2 coordinates,
   }) : super(
           mazeHelper: mazeHelper,
-          length:
-              (mazeHelper.positionMax - shrinkExtent) * mazeHelper.playerSize +
-                  (mazeHelper.positionMax - shrinkExtent - 1) *
-                      mazeHelper.wallThickness,
+          length: length,
           coordinates: coordinates,
           isVertical: true,
+        );
+}
+
+class HorizontalDangerZone extends DangerZone {
+  HorizontalDangerZone({
+    required MazeHelper mazeHelper,
+    required double length,
+    required Vector2 coordinates,
+  }) : super(
+          mazeHelper: mazeHelper,
+          length: length,
+          coordinates: coordinates,
+          isVertical: false,
         );
 }
