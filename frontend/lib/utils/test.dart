@@ -9,5 +9,4 @@ main(){
   socket.emitWithAck('createRoom', 'hello', ack: (data){
     print(data);
   });
-  
 }
