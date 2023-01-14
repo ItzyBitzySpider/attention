@@ -10,6 +10,8 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
+import '../gameplay/handler.dart';
+
 class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   late MazeHelper mazeHelper;
 
@@ -166,8 +168,11 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   @override
   void update(double dt) {
     super.update(dt);
-
     drawWalls(player.positionX, player.positionY);
+    // iterate map
+    Handler.locations.forEach((key, value) {
+      drawEnemy(value[0], value[1]);
+    });    
     drawEnemy(10, 10);
   }
 }

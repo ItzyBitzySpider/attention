@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:attention_game/game/types/join_room_Result.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -11,7 +13,7 @@ class Handler {
   static List<Map<String, int>> packetCache = [];
   static int serverTicks = 0;
 
-  static Map<String, List<int>> locations = {};
+  static Map locations = {};
   static List<List> hearts = [];
   static int playersLeft = 0;
   static Map<String, int> lives = {};
@@ -88,20 +90,25 @@ class Handler {
     });
   }
 
-  static void startGameLoop(shrinkMazeFn, hitFn) {
+  static void startGameLoop() {
     socket.on('playerLocations', (data) {
       print(data);
       packetCache = packetCache
           .where((p) => ((p["packetNumber"] ?? 0) > data.packetNumber))
           .toList();
 
-      serverTicks = data.serverTicks;
-      locations = data.locations;
+      serverTicks = data['serverTicks'];
+      // print(data['locations'].toString());
+      // parse json
+      
+      locations = json.decode(data['locations']);
       packetCache.forEach((p) {
         applyPacket(locations, p["input"]);
       });
     });
+  }
 
+  static void pvp(shrinkMazeFn, hitFn) {
     socket.on('hearts', (data) {
       hearts = data;
     });
