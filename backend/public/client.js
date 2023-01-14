@@ -91,7 +91,9 @@ class Network {
 
   start() {
     console.log(this.socket, this.roomId);
-    this.socket.emit("startGame", this.roomId);
+    this.socket.emit("startGame", this.roomId, ([horiz, vert]) => {
+      console.log("Maze", horiz, vert);
+    });
   }
 }
 

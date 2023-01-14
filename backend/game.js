@@ -1,8 +1,9 @@
 import Loop from "accurate-game-loop";
+import { Maze } from "./maze.js";
 
 const LOOP_FPS = 5;
 const MAX_LATENCY_MS = 200;
-const MAX_STATE_CACHE_SIZE = Math.ceil(MAX_LATENCY_MS(1000 / LOOP_FPS));
+const MAX_STATE_CACHE_SIZE = Math.ceil(MAX_LATENCY_MS * (1000 / LOOP_FPS));
 
 //TODO time based event to shrink maze or end game
 export class GameState {
@@ -15,7 +16,7 @@ export class GameState {
     this.serverTicks = 0;
     this.loop = new Loop(() => this.updatePositions(), LOOP_FPS);
 
-    //TODO get start locations and maze
+    this.maze = new Maze(20, 20);
   }
 
   startGame() {
@@ -84,10 +85,12 @@ export function createGame(roomId) {
 }
 
 export function startGameListeners(socket) {
-  socket.on("startGame", (callback) => {
+  socket.on("startGame", ({}, callback) => {
     Array.from(socket.rooms).forEach((roomId) => {
       if (roomId === socket.id) return;
       global.gameStates[roomId].startGame();
+      const maze = global.gameStates[roomId].maze;
+      callback([maze.horiz, maze.vert]);
     });
   });
 
