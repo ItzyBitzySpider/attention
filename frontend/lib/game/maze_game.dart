@@ -10,12 +10,60 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
+  late MazeHelper mazeHelper;
+
+  late Player player;
+  List<Wall> mazeWalls = [];
+
   @override
   Color backgroundColor() => const Color(MAZE_BACKGROUND_COLOR);
 
-  late MazeHelper mazeHelper;
+  void spawnMazeWalls(int positionX, int positionY) {
+    removeAll(mazeWalls);
+    mazeWalls = [];
 
-  void drawMaze(List<List<bool>> vertical, List<List<bool>> horizontal) {
+    for (int y = max(positionY - 1, 0);
+        y < min(positionY + 2, mazeHelper.positionMax);
+        y++) {
+      for (int x = max(positionX - 1, 0);
+          x < min(positionX + 2, mazeHelper.positionMax);
+          x++) {
+        if (mazeHelper.hasTopWall(x, y)) {
+          Wall wall = TopWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+
+        if (mazeHelper.hasBottomWall(x, y)) {
+          Wall wall = BottomWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+
+        if (mazeHelper.hasLeftWall(x, y)) {
+          Wall wall = LeftWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+
+        if (mazeHelper.hasRightWall(x, y)) {
+          Wall wall = RightWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+      }
+    }
+
+    addAll(mazeWalls);
+  }
+
+  void spawnPlayer(int positionX, int positionY) {
+    player = Player(
+      mazeHelper: mazeHelper,
+      positionX: positionX,
+      positionY: positionY,
+    );
+    add(player);
+  }
+
+  @override
+  Future<void> onLoad() async {
     double screenSize = min(size.x, size.y);
 
     mazeHelper = MazeHelper(
@@ -24,62 +72,13 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       screenSize: screenSize,
     );
 
-    for (int y = 0; y < mazeHelper.positionMax; y++) {
-      for (int x = 0; x < mazeHelper.positionMax; x++) {
-        Vector2 coordinates = mazeHelper.positionToCoordinates(x, y);
-
-        if (mazeHelper.hasTopWall(x, y)) {
-          add(horizontalWall(
-            wallThickness: mazeHelper.wallThickness,
-            wallLength: mazeHelper.playerSize,
-            coordinates: coordinates + Vector2(mazeHelper.wallThickness, 0),
-          ));
-        }
-
-        if (mazeHelper.hasBottomWall(x, y)) {
-          add(horizontalWall(
-            wallThickness: mazeHelper.wallThickness,
-            wallLength: mazeHelper.playerSize,
-            coordinates: coordinates +
-                Vector2(mazeHelper.wallThickness,
-                    mazeHelper.wallThickness + mazeHelper.playerSize),
-          ));
-        }
-
-        if (mazeHelper.hasLeftWall(x, y)) {
-          add(verticalWall(
-            wallThickness: mazeHelper.wallThickness,
-            wallLength: mazeHelper.playerSize,
-            coordinates: coordinates + Vector2(0, 0),
-          ));
-        }
-
-        if (mazeHelper.hasRightWall(x, y)) {
-          add(verticalWall(
-            wallThickness: mazeHelper.wallThickness,
-            wallLength: mazeHelper.playerSize,
-            coordinates: coordinates +
-                Vector2(mazeHelper.wallThickness + mazeHelper.playerSize,
-                    mazeHelper.wallThickness),
-          ));
-        }
-      }
-    }
-
-    add(horizontalWall(
-      wallThickness: mazeHelper.wallThickness,
-      wallLength: mazeHelper.wallThickness,
-      coordinates: Vector2(0, screenSize - mazeHelper.wallThickness),
-    ));
-  }
-
-  void spawnPlayer(int x, int y) {
-    add(Player(mazeHelper: mazeHelper, positionX: x, positionY: y));
+    spawnPlayer(0, 0);
   }
 
   @override
-  Future<void> onLoad() async {
-    drawMaze(vertical, horizontal);
-    spawnPlayer(0, 0);
+  void update(double dt) {
+    super.update(dt);
+
+    spawnMazeWalls(player.positionX, player.positionY);
   }
 }

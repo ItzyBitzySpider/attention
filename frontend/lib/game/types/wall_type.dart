@@ -1,0 +1,4 @@
+enum WallType {
+  vertical,
+  horizontal,
+}

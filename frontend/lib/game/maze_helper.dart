@@ -1,9 +1,5 @@
+import 'package:attention_game/game/sizes.dart';
 import 'package:flame/components.dart';
-
-// ignore: constant_identifier_names
-const int WALL_HEIGHT_FACTOR = 15;
-// ignore: constant_identifier_names
-const int WALL_THICKNESS_FACTOR = 2;
 
 class MazeHelper {
   late int positionMax;
