@@ -77,7 +77,6 @@ class Handler {
 
   static void listenForStart(callback) {
     socket.on('maze', (data) {
-      print('here');
       print(data);
       callback();
     });
