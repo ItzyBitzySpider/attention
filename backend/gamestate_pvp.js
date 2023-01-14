@@ -65,15 +65,6 @@ export class PVPGameState extends GameState {
     }, {});
   }
 
-  updateLives() {
-    for (const [socketId, lives] of Object.entries(this.lives)) {
-      global.io.to(socketId).emit("updateLives", {
-        lives,
-        playersLeft,
-      });
-    }
-  }
-
   updatePositions() {
     super.updatePositions();
 
@@ -102,8 +93,8 @@ export class PVPGameState extends GameState {
       const playersLeft = Object.values(this.lives).filter(
         (v) => v >= 0
       ).length;
-      global.io.to(socketId).emit("updateLives", {
-        lives,
+      global.io.to(this.roomId).emit("updateLives", {
+        lives: this.lives,
         playersLeft,
       });
       this.changedLives = false;
