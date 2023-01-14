@@ -30,9 +30,13 @@ global.io.on("connection", (socket) => {
     // console.log(`Ping processing time: ${processingTime}ms`);
   });
 
-  socket.on("disconnect", () => {
-    console.log(`${socket.id} disconnected`);
+  socket.on("disconnecting", () => {
+    console.log(`${socket.id} disconnecting`);
     handleDisconnect(socket);
+  });
+
+  socket.on("disconnected", () => {
+    console.log(`${socket.id} disconnected`);
   });
 });
 
