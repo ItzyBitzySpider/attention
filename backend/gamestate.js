@@ -3,7 +3,7 @@ import { Maze } from "./maze.js";
 
 //TODO increase this lol
 const LOOP_FPS = 5;
-const MAX_LATENCY_MS = 200;
+const MAX_LATENCY_MS = 1000;
 
 const ACTION_COOLDOWN_MS = 1000;
 
@@ -82,6 +82,10 @@ export class GameState {
         this.locations[socketId][1]++;
     }
     this.packetNumbers[socketId] = packetNum;
+  }
+
+  endGame() {
+    this.loop.stop();
   }
 
   removePlayer(socketId) {
