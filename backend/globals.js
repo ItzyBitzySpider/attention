@@ -1,7 +1,7 @@
 import { GameState } from "./game.js";
 
 global.rooms = { INSERT_ROOM_ID: { users: new Set(), gameMode: "test" } };
-global.gameStates = { INSERT_ROOM_ID: new GameState("INSERT_ROOM_ID") };
+global.gameStates = { INSERT_ROOM_ID: new GameState("INSERT_ROOM_ID", 20) };
 /*
 Globals not defined in this file:
 - io: Socket.io server
