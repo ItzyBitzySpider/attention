@@ -31,5 +31,5 @@ jobs:
             export PATH="$PATH:/home/yuna/.nvm/versions/node/v18.13.0/bin"
             killall node || true # Force return true so exit code is not 1
             yarn install
-            yarn prod
+            (yarn prod &) || true
             
