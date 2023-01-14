@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:socket_io_client/socket_io_client.dart';
 
 // socket server url
-const String socketUrl = 'http://hnr.puddle.sg:3000';
-// const String socketUrl = 'http://localhost:3000';
+// const String socketUrl = 'http://hnr.puddle.sg:3000';
+const String socketUrl = 'http://localhost:3000';
 
 Socket _socket = io(
     socketUrl,

@@ -1,4 +1,7 @@
 import 'package:attention_game/screens/lobby.dart';
+import 'package:attention_game/screens/menu.dart';
+import 'package:attention_game/colors.dart';
+import 'package:attention_game/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:attention_game/game/types/gamemode.dart';
 import 'package:attention_game/screens/maze_widget.dart';
@@ -15,10 +18,36 @@ class Gameplay extends StatefulWidget {
 }
 
 class _GameplayState extends State<Gameplay> {
+  int playerLeft = 0;
+  bool isDead = false;
+  int playersLeft = 5;
+  int mazeShrinkTimeSeconds = 191;
+  int lives = 3;
+
   @override
   void initState() {
     Handler.startGameLoop();
+    Handler.pvp(updateTimeLeft, () {}, updatePlayersLeft, updateLivesLeft);
     super.initState();
+  }
+
+  void updateLivesLeft(livesLeft) {
+    setState(() {
+      isDead = livesLeft == 0;
+      lives = livesLeft;
+    });
+  }
+
+  void updatePlayersLeft(players) {
+    setState(() {
+      playersLeft = players;
+    });
+  }
+
+  updateTimeLeft(time) {
+    setState(() {
+      mazeShrinkTimeSeconds = time;
+    });
   }
 
   Widget detailText(String label, String value) {
@@ -46,7 +75,6 @@ class _GameplayState extends State<Gameplay> {
   }
 
   Widget leftArea() {
-    int lives = 5;
     int keys = 5;
     int totalKeys = 10;
 
@@ -69,9 +97,6 @@ class _GameplayState extends State<Gameplay> {
       return '$minutesString:$secondsString';
     }
 
-    int playersLeft = 5;
-    int mazeShrinkTimeSeconds = 191;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -84,6 +109,37 @@ class _GameplayState extends State<Gameplay> {
 
   @override
   Widget build(BuildContext context) {
+    if (isDead) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'You Died!',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              MenuButton(
+                buttonText: 'Return to Home',
+                backgroundColor: const Color(SPECTATE_BUTTON_COLOR),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Menu(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     return Scaffold(
       body: Row(
         children: [

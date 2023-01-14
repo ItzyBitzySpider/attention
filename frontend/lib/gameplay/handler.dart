@@ -17,7 +17,7 @@ class Handler {
   static Map locations = {};
   static List<List> hearts = [];
   static int playersLeft = 0;
-  static Map<String, int> lives = {};
+  static Map lives = {};
 
   static void applyPacket(locations, input) {
     if (((1 << 0) & input) != 0) {
@@ -109,20 +109,25 @@ class Handler {
     });
   }
 
-  static void pvp(shrinkMazeFn, hitFn) {
+  static void pvp(shrinkMaze, hitPlayer, updatePlayersLeft, updateLives) {
     socket.on('hearts', (data) {
-      hearts = data;
+      print(data);
+      // hearts = data;
     });
 
     socket.on('updateLives', (data) {
-      lives = data['lives'];
+      print(data);
+      var _tmplives = json.decode(data['lives']);
+      lives = _tmplives;
       playersLeft = data['playersLeft'];
+      updateLives(_tmplives[socket.id]);
+      updatePlayersLeft(data['playersLeft']);
     });
 
-    socket.on('shrinkMaze', (newMazeSize) {
-      shrinkMazeFn(newMazeSize);
+    socket.on('shrinkMaze', (data) {
+      // shrinkMaze(data[0]);
     });
 
-    socket.on('hit', hitFn);
+    // socket.on('hit', hitPlayer);
   }
 }
