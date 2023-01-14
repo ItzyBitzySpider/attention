@@ -19,7 +19,7 @@ export function startRoomListeners(socket) {
     } else {
       global.rooms[roomId].add(socket.id);
       socket.join(roomId);
-      io.to(roomId).emit("updateUsers", global.rooms[roomId].length);
+      io.to(roomId).emit("updateUsers", global.rooms[roomId].size);
       callback("Success");
     }
   });
@@ -29,6 +29,6 @@ export function handleDisconnect(socket) {
   socket.rooms.forEach((roomId) => {
     if (v == socket.id) return;
     global.rooms[roomId].remove(socket.id);
-    io.to(roomId).emit("updateUsers", global.rooms[roomId].length);
+    io.to(roomId).emit("updateUsers", global.rooms[roomId].size);
   });
 }
