@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:attention_game/colors.dart';
 import 'package:attention_game/game/danger_zone.dart';
+import 'package:attention_game/game/earthquake.dart';
 import 'package:attention_game/game/enemy.dart';
 import 'package:attention_game/game/pickup.dart';
 import 'package:attention_game/game/maze_helper.dart';
@@ -263,6 +264,16 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   void update(double dt) {
     super.update(dt);
     frameCounter++;
+
+    if (player.earthquakeOnCooldown) {
+      player.cooldownTimer -= (dt * 1000000).toInt();
+
+      if (player.cooldownTimer <= 0) {
+        player.earthquakeOnCooldown = false;
+        player.cooldownTimer = 0;
+        player.remove(player.storedEarthquake!);
+      }
+    }
 
     removeAll(dangerZones);
     dangerZones = [];

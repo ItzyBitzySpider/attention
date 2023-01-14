@@ -1,8 +1,15 @@
+import 'package:attention_game/game/earthquake.dart';
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/types/direction.dart';
 import 'package:attention_game/gameplay/handler.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flutter/services.dart';
+
+// ignore: constant_identifier_names
+const int EARTHQUAKE_COOLDOWN_MILLISECONDS = 1000;
+// ignore: constant_identifier_names
+const double EARTHQUAKE_ANIMATION_DURATION = 0.8;
 
 class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   MazeHelper mazeHelper;
@@ -10,6 +17,10 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   late double playerMovementDistance;
   late int positionX;
   late int positionY;
+
+  bool earthquakeOnCooldown = false;
+  int cooldownTimer = 0;
+  Earthquake? storedEarthquake;
 
   Player(
       {required this.mazeHelper,
@@ -21,8 +32,19 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   }
 
   void earthquake() {
-    Handler.sendInput(1 << 4);
-    // TODO handle earthquake here
+    if (!earthquakeOnCooldown) {
+      Handler.sendInput(1 << 4);
+
+      cooldownTimer = EARTHQUAKE_COOLDOWN_MILLISECONDS * 1000;
+      storedEarthquake = Earthquake(mazeHelper: mazeHelper);
+      storedEarthquake!.add(ScaleEffect.to(
+        Vector2.zero(),
+        EffectController(duration: EARTHQUAKE_ANIMATION_DURATION),
+      ));
+      add(storedEarthquake!);
+
+      earthquakeOnCooldown = true;
+    }
   }
 
   void drawPlayerPosition() {
