@@ -22,7 +22,10 @@ export function startRoomListeners(socket) {
     global.rooms[roomId].players.add(socket.id);
     socket.join(roomId);
     io.to(roomId).emit("updateUsers", global.rooms[roomId].players.size);
-    callback(global.rooms[roomId].gameMode);
+    callback({
+      gameMode: global.rooms[roomId].gameMode,
+      numPlayers: global.rooms[roomId].players.size,
+    });
   });
 
   socket.on("setSpectator", (isSpectator) => {
