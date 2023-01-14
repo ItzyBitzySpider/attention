@@ -20,11 +20,12 @@ export class GameState {
   }
 
   startGame() {
-    this.loop.start();
+    this.maze.generate();
     global.rooms[this.roomId].users.forEach((socketId) => {
       this.packetNumbers[socketId] = -1;
       this.locations[socketId] = [0, 0];
     });
+    this.loop.start();
   }
 
   updatePositions() {
