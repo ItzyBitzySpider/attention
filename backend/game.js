@@ -181,8 +181,9 @@ class PVPGameState extends GameState {
         if (Math.abs(y - oppY) > 1) return;
 
         this.lives[oppSocketId]--;
-        this.cooldown[socketId] = this.serverTicks + COOLDOWN_LOOPS;
+        global.io.to(this.roomId).emit("hit");
       });
+      this.cooldown[socketId] = this.serverTicks + COOLDOWN_LOOPS;
     }
   }
 
