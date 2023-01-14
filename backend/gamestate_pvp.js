@@ -21,7 +21,8 @@ function heartsToCoordinates(hearts) {
   return Array.from(hearts).map((v) => v.split(",").map((x) => parseInt(x)));
 }
 
-const TIME_SHRINK_MS = 30000; //in ms
+const FIRST_SHRINK_MS = 30000;
+const TIME_SHRINK_MS = 15000;
 export class PVPGameState extends GameState {
   constructor(roomId, mazeSize) {
     super(roomId, mazeSize);
@@ -30,7 +31,7 @@ export class PVPGameState extends GameState {
     this.changedHearts = false;
     this.cooldown = {};
 
-    this.NEXT_TIME_SHRINK_MS = 0;
+    this.NEXT_TIME_SHRINK_MS = FIRST_SHRINK_MS - TIME_SHRINK_MS;
     this.incrementTimeShrink();
   }
 
