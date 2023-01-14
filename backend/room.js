@@ -14,18 +14,10 @@ export function startRoomListeners(socket, rooms) {
     if (!rooms[roomId]) {
       callback("Room does not exist");
     } else {
-      rooms[roomId] = socket.handshake.query.username;
+      rooms[roomId].add(socket.id);
       socket.join(roomId);
       io.to(roomId).emit("updateUsers", Array.from(rooms[roomId]));
       callback("Success");
-    }
-  });
-
-  socket.on("sendMessage", (roomId, message) => {
-    if (!rooms[roomId]) {
-      socket.emit("roomDoesNotExist", roomId);
-    } else {
-      io.to(roomId).emit("receiveMessage", message);
     }
   });
 }
