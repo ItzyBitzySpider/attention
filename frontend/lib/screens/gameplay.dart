@@ -8,6 +8,8 @@ import 'package:attention_game/screens/maze_widget.dart';
 
 import '../gameplay/handler.dart';
 
+late Function(int) globalUpdateTimeLeft;
+
 class Gameplay extends StatefulWidget {
   final GameMode gamemode;
 
@@ -24,13 +26,6 @@ class _GameplayState extends State<Gameplay> {
   int mazeShrinkTimeSeconds = 191;
   int lives = 3;
 
-  @override
-  void initState() {
-    Handler.startGameLoop();
-    Handler.pvp(updateTimeLeft, () {}, updatePlayersLeft, updateLivesLeft);
-    super.initState();
-  }
-
   void updateLivesLeft(livesLeft) {
     setState(() {
       isDead = livesLeft == 0;
@@ -44,10 +39,19 @@ class _GameplayState extends State<Gameplay> {
     });
   }
 
-  updateTimeLeft(time) {
+  void updateTimeLeft(time) {
     setState(() {
       mazeShrinkTimeSeconds = time;
     });
+  }
+
+  @override
+  void initState() {
+    Handler.startGameLoop();
+    Handler.pvp(() {}, updatePlayersLeft, updateLivesLeft);
+
+    globalUpdateTimeLeft = updateTimeLeft;
+    super.initState();
   }
 
   Widget detailText(String label, String value) {
@@ -88,7 +92,7 @@ class _GameplayState extends State<Gameplay> {
 
   Widget rightArea() {
     String formatDuration(int totalSeconds) {
-      final duration = Duration(seconds: totalSeconds);
+      final duration = Duration(milliseconds: totalSeconds);
       final minutes = duration.inMinutes;
       final seconds = totalSeconds % 60;
 
