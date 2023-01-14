@@ -67,7 +67,7 @@ export class PVPGameState extends GameState {
     global.io
       .to(this.roomId)
       .emit("shrinkMaze", [
-        FIRST_SHRINK_MS / 1000,
+        FIRST_SHRINK_MS,
         this.maze.vert.length - this.shrinkValue,
       ]);
 
@@ -105,7 +105,7 @@ export class PVPGameState extends GameState {
       global.io
         .to(this.roomId)
         .emit("shrinkMaze", [
-          TIME_SHRINK_MS / 1000,
+          TIME_SHRINK_MS,
           this.maze.vert.length - this.shrinkValue,
         ]);
 
