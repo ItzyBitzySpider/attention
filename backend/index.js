@@ -16,7 +16,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`${socket.id} disconnected`);
-    handleDisconnect(socket.id, rooms);
+    handleDisconnect(socket, rooms);
   });
 });
 
