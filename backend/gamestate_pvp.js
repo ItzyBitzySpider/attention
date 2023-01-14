@@ -95,7 +95,7 @@ export class PVPGameState extends GameState {
     super.updatePositions();
 
     if (
-      this.NEXT_TIME_SHRINK_LOOP === FIRST_DELAY_MS &&
+      this.NEXT_TIME_SHRINK_MS === FIRST_DELAY_MS &&
       this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
     ) {
       global.io
