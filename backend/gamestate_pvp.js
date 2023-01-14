@@ -43,6 +43,7 @@ function heartsToCoordinates(hearts) {
 }
 
 const FIRST_SHRINK_MS = 30000;
+const FIRST_DELAY_MS = 1000;
 const TIME_SHRINK_MS = 15000;
 export class PVPGameState extends GameState {
   constructor(roomId, mazeSize) {
@@ -52,12 +53,12 @@ export class PVPGameState extends GameState {
     this.changedHearts = false;
     this.cooldown = {};
 
-    this.NEXT_TIME_SHRINK_MS = FIRST_SHRINK_MS - TIME_SHRINK_MS;
-    this.incrementTimeShrink();
+    this.NEXT_TIME_SHRINK_MS = 0;
+    this.incrementTimeShrink(FIRST_DELAY_MS);
   }
 
-  async incrementTimeShrink() {
-    this.NEXT_TIME_SHRINK_MS += TIME_SHRINK_MS;
+  async incrementTimeShrink(time) {
+    this.NEXT_TIME_SHRINK_MS += time;
     this.NEXT_TIME_SHRINK_LOOP = Math.ceil(
       this.NEXT_TIME_SHRINK_MS / MS_PER_LOOP
     );
@@ -88,21 +89,23 @@ export class PVPGameState extends GameState {
       },
       {}
     );
-
-    return () => {
-      global.io
-        .to(this.roomId)
-        .emit("shrinkMaze", [
-          FIRST_SHRINK_MS,
-          this.maze.vert.length - this.shrinkValue,
-        ]);
-    };
   }
 
   updatePositions() {
     super.updatePositions();
 
     if (
+      this.NEXT_TIME_SHRINK_LOOP === FIRST_DELAY_MS &&
+      this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
+    ) {
+      global.io
+        .to(this.roomId)
+        .emit("shrinkMaze", [
+          FIRST_SHRINK_MS - FIRST_DELAY_MS,
+          this.maze.vert.length - this.shrinkValue,
+        ]);
+      this.incrementTimeShrink(FIRST_SHRINK_MS - FIRST_DELAY_MS);
+    } else if (
       this.shrinkValue < 7 &&
       this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
     ) {
@@ -130,7 +133,7 @@ export class PVPGameState extends GameState {
           this.changedLives = true;
         }
       });
-      this.incrementTimeShrink();
+      this.incrementTimeShrink(TIME_SHRINK_MS);
     }
 
     if (this.changedLives) {
