@@ -157,7 +157,6 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   @override
   Future<void> onLoad() async {
     double screenSize = min(size.x, size.y);
-    print(Handler.maze[0]);
     //cast to bool;
     mazeHelper = MazeHelper(
       vertical: Handler.maze[1],
