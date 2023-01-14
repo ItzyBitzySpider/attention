@@ -21,12 +21,13 @@ jobs:
           script: |
             ls
             cd /home/yuna/attention
-            git checkout main || true # Force return true so exit code is not 1
             
             # Pull from git repo
+            git checkout main || true # Force return true so exit code is not 1
             git pull
             
             # Backend CD
+            cd backend
             export PATH="$PATH:/home/yuna/.nvm/versions/node/v18.13.0/bin"
             killall node || true # Force return true so exit code is not 1
             yarn install
