@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:attention_game/colors.dart';
+import 'package:attention_game/game/danger_zone.dart';
 import 'package:attention_game/game/enemy.dart';
 import 'package:attention_game/game/pickup.dart';
 import 'package:attention_game/game/maze_helper.dart';
@@ -17,12 +17,17 @@ import '../utils/sockets.dart';
 class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   late MazeHelper mazeHelper;
 
+  int frameCounter = 0;
+
   late Player player;
   List<Wall> mazeWalls = [];
   List<Enemy> enemies = [];
   List<Pickup> pickups = [];
+  List<DangerZone> dangerZones = [];
 
+  bool isShrinking = false;
   int shrinkExtent = 0;
+  int timeToShrink = 0;
 
   @override
   Color backgroundColor() => const Color(MAZE_BACKGROUND_COLOR);
@@ -142,6 +147,11 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     shrinkExtent++;
   }
 
+  void startShrinkCountdown(int milliseconds) {
+    isShrinking = true;
+    timeToShrink = milliseconds * 1000;
+  }
+
   void drawEnemies() {
     removeAll(enemies);
     enemies = [];
@@ -162,6 +172,36 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     });
 
     addAll(enemies);
+  }
+
+  void drawDangerZones() {
+    bool isDangerZone(int x, int y) {
+      int opposite = mazeHelper.positionMax - shrinkExtent - 1;
+      return x == shrinkExtent ||
+          y == shrinkExtent ||
+          x == opposite ||
+          y == opposite;
+    }
+
+    for (int y = max(player.positionY - 1, 0);
+        y < min(mazeHelper.positionMax, player.positionY + 2);
+        y++) {
+      for (int x = max(player.positionX - 1, 0);
+          x < min(mazeHelper.positionMax, player.positionX + 2);
+          x++) {
+        if (isDangerZone(x, y)) {
+          dangerZones.add(DangerZone(
+            mazeHelper: mazeHelper,
+            positionX: x,
+            positionY: y,
+            colorCode: RED_BORDER_COLORS[
+                frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+          ));
+        }
+      }
+    }
+
+    addAll(dangerZones);
   }
 
   // void drawKeys() {
@@ -206,7 +246,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
 
   @override
   Future<void> onLoad() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     double screenSize = min(size.x, size.y);
     //cast to bool;
     mazeHelper = MazeHelper(
@@ -221,6 +261,22 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   @override
   void update(double dt) {
     super.update(dt);
+    frameCounter++;
+
+    removeAll(dangerZones);
+    dangerZones = [];
+    if (isShrinking) {
+      timeToShrink -= (dt * 1000000).toInt();
+
+      if (timeToShrink <= 0) {
+        isShrinking = false;
+        timeToShrink = 0;
+        shrinkMaze();
+      } else {
+        drawDangerZones();
+      }
+    }
+
     drawWalls(player.positionX, player.positionY);
     // iterate map
 
