@@ -62,7 +62,6 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    print(event)
     if (event is RawKeyDownEvent && !event.repeat) {
       // Handle movement keys
       if (logicalKeyboardKeyToDirection.containsKey(event.logicalKey)) {
