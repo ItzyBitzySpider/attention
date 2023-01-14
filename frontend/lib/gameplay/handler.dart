@@ -9,6 +9,7 @@ class Handler {
   static String roomId = '';
   static Socket socket = getSocket();
   static int packetsSent = 0;
+  static List<dynamic> maze = [];
 
   static List<Map<String, int>> packetCache = [];
   static int serverTicks = 0;
@@ -85,7 +86,7 @@ class Handler {
 
   static void listenForStart(callback) {
     socket.on('maze', (data) {
-      print(data);
+      maze = data;
       callback();
     });
   }
