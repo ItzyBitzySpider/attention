@@ -2,7 +2,8 @@ import 'package:attention_game/colors.dart';
 import 'package:attention_game/screens/gameplay.dart';
 import 'package:attention_game/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:attention_game/game/common.dart';
+import 'package:attention_game/game/types/gamemode.dart';
+import 'package:attention_game/game/types/player_type.dart';
 
 // ignore: constant_identifier_names
 const double DETAIL_TEXT_HEADER_SIZE = 40;
@@ -108,7 +109,7 @@ class _LobbyState extends State<Lobby> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'You are a ${playerType == PlayerType.player ? 'Player' : 'Spectator'}',
+              'Join as ${playerType == PlayerType.player ? 'Player' : 'Spectator'}',
               style: const TextStyle(fontSize: DETAIL_TEXT_HEADER_SIZE),
             ),
             const SizedBox(height: 80),

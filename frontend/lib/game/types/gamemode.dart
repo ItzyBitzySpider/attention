@@ -6,5 +6,3 @@ String gamemodeToString(GameMode gamemode) {
   }
   return 'Escape';
 }
-
-enum PlayerType { player, spectator }
