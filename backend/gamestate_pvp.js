@@ -44,7 +44,7 @@ export class PVPGameState extends GameState {
   startGame() {
     super.startGame();
 
-    global.rooms[this.roomId].users.forEach((socketId) => {
+    global.rooms[this.roomId].players.forEach((socketId) => {
       this.lives[socketId] = 3;
       this.cooldown[socketId] = -1;
     });
@@ -59,7 +59,7 @@ export class PVPGameState extends GameState {
     ];
     global.io.to(this.roomId).emit("hearts", heartsToCoordinates(this.hearts));
 
-    this.locations = global.rooms[roomId].users.reduce((loc, socketId, i) => {
+    this.locations = global.rooms[roomId].players.reduce((loc, socketId, i) => {
       loc[socketId] = START_LOCATIONS[i];
       return loc;
     }, {});

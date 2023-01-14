@@ -6,7 +6,11 @@ export function startRoomListeners(socket) {
   socket.on("createRoom", (gameMode, callback) => {
     const roomId = generateRoomId();
     console.log(socket.id, "create:", roomId);
-    global.rooms[roomId] = { users: new Set([socket.id]), gameMode };
+    global.rooms[roomId] = {
+      users: new Set([socket.id]),
+      gameMode,
+      spectators: new Set(),
+    };
     socket.join(roomId);
     callback(roomId);
   });
@@ -14,20 +18,31 @@ export function startRoomListeners(socket) {
   socket.on("joinRoom", (roomId, callback) => {
     console.log(socket.id, "join:", roomId);
     if (!global.rooms[roomId]) {
-      callback("Room does not exist");
-    } else {
-      global.rooms[roomId].users.add(socket.id);
-      socket.join(roomId);
-      io.to(roomId).emit("updateUsers", global.rooms[roomId].users.size);
-      callback("Success");
+      callback();
+      return;
     }
+    global.rooms[roomId].players.add(socket.id);
+    socket.join(roomId);
+    io.to(roomId).emit("updateUsers", global.rooms[roomId].players.size);
+    callback(global.rooms[roomId].gameMode);
+  });
+
+  socket.on("setSpectator", (isSpectator) => {
+    if (isSpectator) {
+      global.rooms[roomId].players.delete(socket.id);
+      global.rooms[roomId].spectators.add(socket.id);
+    } else {
+      global.rooms[roomId].spectators.delete(socket.id);
+      global.rooms[roomId].players.add(socket.id);
+    }
+    io.to(roomId).emit("updateUsers", global.rooms[roomId].players.size);
   });
 }
 
 export function handleDisconnect(socket) {
   socket.rooms.forEach((roomId) => {
     if (v == socket.id) return;
-    global.rooms[roomId].users.delete(socket.id);
-    io.to(roomId).emit("updateUsers", global.rooms[roomId].users.size);
+    global.rooms[roomId].players.delete(socket.id);
+    io.to(roomId).emit("updateUsers", global.rooms[roomId].players.size);
   });
 }

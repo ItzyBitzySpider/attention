@@ -33,7 +33,7 @@ export class GameState {
   }
 
   startGame() {
-    global.rooms[this.roomId].users.forEach((socketId) => {
+    global.rooms[this.roomId].players.forEach((socketId) => {
       this.packetNumbers[socketId] = -1;
       this.locations[socketId] = [0, 0];
     });
