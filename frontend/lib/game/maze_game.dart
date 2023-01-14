@@ -5,12 +5,10 @@ import 'package:attention_game/game/enemy.dart';
 import 'package:attention_game/game/pickup.dart';
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/player.dart';
-import 'package:attention_game/game/sample.dart';
 import 'package:attention_game/game/wall.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 import '../gameplay/handler.dart';
 import '../utils/sockets.dart';
@@ -179,11 +177,11 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   }
 
   void removePickup(int positionX, int positionY) {
-    for (final pickup in pickups) {
-      if (pickup.positionX == player.positionX &&
-          pickup.positionY == player.positionY) {
-        pickups.remove(pickup);
-        remove(pickup);
+    for (int i = 0; i < pickups.length; i++) {
+      if (pickups[i].positionX == positionX &&
+          pickups[i].positionY == positionY) {
+        remove(pickups[i]);
+        pickups.removeAt(i);
         break;
       }
     }
@@ -200,6 +198,8 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     );
 
     spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
+    spawnHeart(0, 1);
+    spawnHeart(5, 1);
   }
 
   @override

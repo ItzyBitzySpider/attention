@@ -11,11 +11,12 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   late int positionX;
   late int positionY;
 
-  Player({
-    required this.mazeHelper,
-    required this.positionX,
-    required this.positionY,
-  }) : super(size: Vector2.all(mazeHelper.playerSize)) {
+  Player(
+      {required this.mazeHelper,
+      required this.positionX,
+      required this.positionY,
+      x})
+      : super(size: Vector2.all(mazeHelper.playerSize)) {
     playerMovementDistance = mazeHelper.playerSize + mazeHelper.wallThickness;
   }
 
