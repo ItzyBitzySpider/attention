@@ -28,7 +28,8 @@ export function startRoomListeners(socket) {
     });
   });
 
-  socket.on("setSpectator", (isSpectator) => {
+  socket.on("setSpectator", ({ roomId, isSpectator }) => {
+    console.log(roomId, global.rooms[roomId]);
     if (isSpectator) {
       global.rooms[roomId].players.delete(socket.id);
       global.rooms[roomId].spectators.add(socket.id);

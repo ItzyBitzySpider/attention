@@ -67,6 +67,14 @@ class Handler {
     socket.emit('startGame', roomId);
   }
 
+  static void setSpectator(isSpectator) {
+    Map<String, dynamic> packet = {
+      'roomId': roomId,
+      'isSpectator': isSpectator
+    };
+    socket.emit('setSpectator', packet);
+  }
+
   static void listenForStart(callback) {
     socket.on('maze', (data) {
       print('here');

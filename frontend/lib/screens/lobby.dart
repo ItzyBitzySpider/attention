@@ -53,7 +53,7 @@ class _LobbyState extends State<Lobby> {
         playerCount = count;
       });
     });
-    Handler.listenForStart((){
+    Handler.listenForStart(() {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -83,6 +83,7 @@ class _LobbyState extends State<Lobby> {
         } else {
           playerType = PlayerType.player;
         }
+        Handler.setSpectator(playerType == PlayerType.spectator);
       });
     }
 
