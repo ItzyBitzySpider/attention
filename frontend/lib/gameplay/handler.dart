@@ -10,8 +10,8 @@ class Handler {
 
   static List<Map<String, int>> packetCache = [];
   static int serverTicks = 0;
-  static Map<String, List<int>> locations = {};
 
+  static Map<String, List<int>> locations = {};
   static List<List> hearts = [];
   static int playersLeft = 0;
   static Map<String, int> lives = {};
