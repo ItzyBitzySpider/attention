@@ -10,7 +10,7 @@ class Gameplay extends StatelessWidget {
   Widget leftArea() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: const [
         Text('left'),
       ],
     );
@@ -19,7 +19,7 @@ class Gameplay extends StatelessWidget {
   Widget rightArea() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: const [
         Text(
           'right',
         )
@@ -32,9 +32,15 @@ class Gameplay extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          Expanded(flex: 1, child: leftArea()),
-          const Expanded(flex: 3, child: MazeWidget()),
-          Expanded(flex: 1, child: rightArea()),
+          Expanded(child: leftArea()),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 50.0),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: MazeWidget(),
+            ),
+          ),
+          Expanded(child: rightArea()),
         ],
       ),
     );

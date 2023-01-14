@@ -1,15 +1,22 @@
+import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/types/direction.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 
-// ignore: constant_identifier_names
-const double PLAYER_SIZE = 50.0;
-
-// ignore: constant_identifier_names
-const double PLAYER_SPEED = PLAYER_SIZE;
-
 class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
-  Player() : super(size: Vector2.all(PLAYER_SIZE));
+  MazeHelper mazeHelper;
+
+  late double playerMovementDistance;
+  late int positionX;
+  late int positionY;
+
+  Player({
+    required this.mazeHelper,
+    required this.positionX,
+    required this.positionY,
+  }) : super(size: Vector2.all(mazeHelper.playerSize)) {
+    playerMovementDistance = mazeHelper.playerSize + mazeHelper.wallThickness;
+  }
 
   void earthquake() {
     // TODO handle earthquake here
@@ -18,16 +25,28 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   void movePlayer(Direction direction) {
     switch (direction) {
       case Direction.up:
-        position.add(Vector2(0, -PLAYER_SPEED));
+        if (!mazeHelper.hasTopWall(positionX, positionY)) {
+          position.add(Vector2(0, -playerMovementDistance));
+          positionY--;
+        }
         break;
       case Direction.down:
-        position.add(Vector2(0, PLAYER_SPEED));
+        if (!mazeHelper.hasBottomWall(positionX, positionY)) {
+          position.add(Vector2(0, playerMovementDistance));
+          positionY++;
+        }
         break;
       case Direction.left:
-        position.add(Vector2(-PLAYER_SPEED, 0));
+        if (!mazeHelper.hasLeftWall(positionX, positionY)) {
+          position.add(Vector2(-playerMovementDistance, 0));
+          positionX--;
+        }
         break;
       case Direction.right:
-        position.add(Vector2(PLAYER_SPEED, 0));
+        if (!mazeHelper.hasRightWall(positionX, positionY)) {
+          position.add(Vector2(playerMovementDistance, 0));
+          positionX++;
+        }
         break;
     }
   }
@@ -36,7 +55,9 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   Future<void> onLoad() async {
     super.onLoad();
     sprite = await gameRef.loadSprite('player_sprite.png');
-    position = gameRef.size / 2;
+
+    position = mazeHelper.positionToCoordinates(positionX, positionY) +
+        Vector2(mazeHelper.wallThickness, mazeHelper.wallThickness);
   }
 
   @override
