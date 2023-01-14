@@ -2,17 +2,15 @@ export class Maze {
   constructor(sizes, space) {
     this.horiz = [[true], [true]];
     this.vert = [[true, true]];
-    for (let cur = 1, next; sizes.length > 0; cur = next) {
-      next = sizes.pop();
-      this.expand(cur, next, space);
-      this.loops(cur, next, space);
-    }
+    while (sizes.length > 0) this.expand(this.vert.length, sizes.pop(), space);
+    this.loops(this.vert.length, space);
   }
   expand(cur, next, space) {
     let shift = (next - cur) / 2,
-      stack = [];
+      stack = [],
+      idx = Math.floor(Math.random() * cur);
     for (let i = 0; i < cur; i++) {
-      if (i > 0 && Math.random() > space) continue;
+      if (i != idx && Math.random() > space) continue;
       this.horiz[0][i] =
         this.horiz[cur][i] =
         this.vert[i][0] =
@@ -57,24 +55,25 @@ export class Maze {
     while (stack.length > 0) {
       let [x, y] = stack[stack.length - 1],
         nghbrs = [];
-      if (y > 0 && !visited[y - 1][x]) nghbrs.push(["u", x, y - 1]);
-      if (y < next - 1 && !visited[y + 1][x]) nghbrs.push(["d", x, y + 1]);
-      if (x > 0 && !visited[y][x - 1]) nghbrs.push(["l", x - 1, y]);
-      if (x < next - 1 && !visited[y][x + 1]) nghbrs.push(["r", x + 1, y]);
+      if (y > 0 && !visited[y - 1][x]) nghbrs.push(["h", x, y - 1]);
+      if (y < next - 1 && !visited[y + 1][x]) nghbrs.push(["h", x, y + 1]);
+      if (x > 0 && !visited[y][x - 1]) nghbrs.push(["v", x - 1, y]);
+      if (x < next - 1 && !visited[y][x + 1]) nghbrs.push(["v", x + 1, y]);
       if (nghbrs.length > 0) {
         let [dir, nx, ny] = nghbrs[Math.floor(Math.random() * nghbrs.length)];
-        if (dir == "u") this.horiz[y][x] = false;
-        if (dir == "d") this.horiz[y + 1][x] = false;
-        if (dir == "l") this.vert[y][x] = false;
-        if (dir == "r") this.vert[y][x + 1] = false;
+        (dir == "h" ? this.horiz : this.vert)[Math.max(y, ny)][
+          Math.max(x, nx)
+        ] = false;
         stack.push([nx, ny]);
         visited[ny][nx] = true;
-      } else if (stack.length > 0) {
-        stack.pop();
-      }
+      } else stack.pop();
     }
   }
-  loops(cur, next, space) {
-    let shift = (next - cur) / 2;
+  loops(next, space) {
+    for (let y = 1; y < next; y++)
+      for (let x = 0; x < next; x++) {
+        if (y > 0 && Math.random() < space) this.horiz[y][x] = false;
+        if (x > 0 && Math.random() < space) this.vert[y][x] = false;
+      }
   }
 }
