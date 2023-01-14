@@ -1,4 +1,4 @@
-class Maze {
+export class Maze {
   constructor(sizes, space) {
     this.horiz = [[true], [true]];
     this.vert = [[true, true]];

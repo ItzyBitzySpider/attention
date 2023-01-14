@@ -2,6 +2,7 @@ import { MS_PER_LOOP, GameState } from "./gamestate";
 
 const CHUNK_SIZE = 3;
 const SPAWN_PROBABILITY = 0.2;
+
 function generateHearts(mazeSize) {
   const hearts = new Set();
   for (let i = 0; i < mazeSize; i += CHUNK_SIZE) {
