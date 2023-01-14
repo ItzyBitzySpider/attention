@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:attention_game/colors.dart';
@@ -156,6 +157,8 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
 
   @override
   Future<void> onLoad() async {
+    await Future.delayed(Duration(seconds: 1));
+    print('teststring');
     double screenSize = min(size.x, size.y);
     //cast to bool;
     mazeHelper = MazeHelper(
