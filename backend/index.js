@@ -1,6 +1,7 @@
 import express from "express";
 import { Server } from "socket.io";
 import http from "http";
+import path from "path";
 import { handleDisconnect, startRoomListeners } from "./room.js";
 const __dirname = path.resolve();
 
@@ -19,6 +20,14 @@ io.on("connection", (socket) => {
   console.log(`${socket.id} connected`);
 
   startRoomListeners(socket, rooms);
+
+  socket.on("ping", (data, ack) => {
+    const startTime = Date.now();
+    ack({ data: "pong", timestamp: data.timestamp });
+    const endTime = Date.now();
+    const processingTime = endTime - startTime;
+    // console.log(`Ping processing time: ${processingTime}ms`);
+  });
 
   socket.on("disconnect", () => {
     console.log(`${socket.id} disconnected`);
