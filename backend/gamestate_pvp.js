@@ -100,7 +100,10 @@ export class PVPGameState extends GameState {
   updatePositions() {
     super.updatePositions();
 
-    if (this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP) {
+    if (
+      this.shrinkValue < 7 &&
+      this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
+    ) {
       this.shrinkValue++;
       global.io
         .to(this.roomId)
