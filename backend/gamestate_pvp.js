@@ -81,7 +81,7 @@ export class PVPGameState extends GameState {
     ];
     global.io.to(this.roomId).emit("hearts", heartsToCoordinates(this.hearts));
 
-    this.locations = global.rooms[this.roomId].players.reduce(
+    this.locations = Array.from(global.rooms[this.roomId].players).reduce(
       (loc, socketId, i) => {
         loc[socketId] = START_LOCATIONS[i];
         return loc;
@@ -94,7 +94,7 @@ export class PVPGameState extends GameState {
     super.updatePositions();
 
     if (this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP) {
-      this.shrinkValue--;
+      this.shrinkValue++;
       global.io
         .to(this.roomId)
         .emit("shrinkMaze", this.maze.vert.length - 1 - this.shrinkValue);
