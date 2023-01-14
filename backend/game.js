@@ -11,7 +11,6 @@ const MS_PER_LOOP = 1000 / LOOP_FPS;
 const MAX_STATE_CACHE_SIZE = Math.ceil(MAX_LATENCY_MS / MS_PER_LOOP);
 const COOLDOWN_LOOPS = Math.ceil(ACTION_COOLDOWN_MS / MS_PER_LOOP);
 
-//TODO time based event to shrink maze or end game
 export class GameState {
   constructor(roomId, mazeSize) {
     this.roomId = roomId;
@@ -85,7 +84,6 @@ export class GameState {
 }
 
 const TIME_SHRINK_MS = 30000; //in ms
-
 class PVPGameState extends GameState {
   constructor(roomId, mazeSize) {
     super(roomId, mazeSize);
@@ -104,11 +102,23 @@ class PVPGameState extends GameState {
   }
 
   startGame() {
+    super.startGame();
+
     global.rooms[this.roomId].users.forEach((socketId) => {
       this.lives[socketId] = 3;
       this.cooldown[socketId] = -1;
     });
-    super.startGame();
+
+    const START_LOCATIONS = [
+      [0, 0],
+      [this.mazeBounds[0][1], 0],
+      [0, this.mazeBounds[1][1]],
+      [this.mazeBounds[0][1], this.mazeBounds[1][1]],
+    ];
+    this.locations = global.rooms[roomId].users.reduce((loc, user, i) => {
+      loc[user] = START_LOCATIONS[i];
+      return loc;
+    }, {});
   }
 
   updatePositions() {
