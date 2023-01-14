@@ -1,0 +1,33 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - frontend/**
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            ls
+            cd /home/yuna/attention
+
+            # Pull from git repo
+            git checkout main || true # Force return true so exit code is not 1
+            git pull
+
+            # Frontend CD
+            cd frontend
+            flutter pub get
+            flutter build web --release
+            cp -R build/web/* /var/www/html
