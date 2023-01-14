@@ -25,7 +25,16 @@ export class GameState {
     this.shrinkValue = 0;
 
     this.maze = new Maze(
-      [mazeSize, mazeSize - 2, mazeSize - 4, mazeSize - 6, mazeSize - 8],
+      [
+        mazeSize,
+        mazeSize - 2,
+        mazeSize - 4,
+        mazeSize - 6,
+        mazeSize - 8,
+        mazeSize - 10,
+        mazeSize - 12,
+        mazeSize - 14,
+      ],
       0.15
     );
   }
