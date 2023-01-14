@@ -109,7 +109,7 @@ class Handler {
     });
   }
 
-  static void pvp(shrinkMaze, hitPlayer, updatePlayersLeft, updateLives) {
+  static void pvp(hitPlayer, updatePlayersLeft, updateLives) {
     socket.on('hearts', (data) {
       print(data);
       hearts = data;
@@ -124,10 +124,13 @@ class Handler {
       updatePlayersLeft(data['playersLeft']);
     });
 
+    // socket.on('hit', hitPlayer);
+  }
+
+  static void shrink(shrinkMaze) {
     socket.on('shrinkMaze', (data) {
+      shrinkMaze(data[0]);
       // shrinkMaze(data[0]);
     });
-
-    // socket.on('hit', hitPlayer);
   }
 }

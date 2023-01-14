@@ -7,6 +7,7 @@ import 'package:attention_game/game/pickup.dart';
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/player.dart';
 import 'package:attention_game/game/wall.dart';
+import 'package:attention_game/screens/gameplay.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -234,8 +235,8 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
 
       if ((x - player.positionX).abs() < 2 &&
           (y - player.positionY).abs() < 2) {
-      pickups.add(HeartPickup(
-          mazeHelper: mazeHelper, positionX: x, positionY: y));
+        pickups.add(
+            HeartPickup(mazeHelper: mazeHelper, positionX: x, positionY: y));
       }
     }
 
@@ -255,6 +256,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     );
 
     spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
+    Handler.shrink(startShrinkCountdown);
   }
 
   @override
@@ -274,6 +276,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       } else {
         drawDangerZones();
       }
+      globalUpdateTimeLeft(timeToShrink);
     }
 
     drawWalls(player.positionX, player.positionY);
