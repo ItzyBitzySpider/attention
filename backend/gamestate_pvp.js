@@ -133,7 +133,7 @@ export class PVPGameState extends GameState {
         (v) => v >= 0
       ).length;
       global.io.to(this.roomId).emit("updateLives", {
-        lives: this.lives,
+        lives: JSON.stringify(this.lives),
         playersLeft,
       });
 
