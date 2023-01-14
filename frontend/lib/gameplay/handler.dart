@@ -67,6 +67,14 @@ class Handler {
     socket.emit('startGame', roomId);
   }
 
+  static void listenForStart(callback) {
+    socket.on('maze', (data) {
+      print('here');
+      print(data);
+      callback();
+    });
+  }
+
   static void startGameLoop(renderFn) {
     render = renderFn;
 

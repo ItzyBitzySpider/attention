@@ -48,11 +48,18 @@ class _LobbyState extends State<Lobby> {
         }
       });
     }
-
     Handler.updatePlayerCount((count) {
       setState(() {
         playerCount = count;
       });
+    });
+    Handler.listenForStart((){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Gameplay(gamemode: widget.gamemode),
+        ),
+      );
     });
     super.initState();
   }
@@ -60,6 +67,7 @@ class _LobbyState extends State<Lobby> {
   @override
   Widget build(BuildContext context) {
     void startGamePressed() {
+      Handler.startGame();
       Navigator.push(
         context,
         MaterialPageRoute(
