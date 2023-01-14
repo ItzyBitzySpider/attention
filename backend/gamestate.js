@@ -1,6 +1,7 @@
 import Loop from "accurate-game-loop";
 import { Maze } from "./maze.js";
 
+//TODO increase this lol
 export const LOOP_FPS = 5;
 const MAX_LATENCY_MS = 200;
 
