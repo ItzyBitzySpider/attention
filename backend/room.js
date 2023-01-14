@@ -17,9 +17,9 @@ export function startRoomListeners(socket) {
     if (!global.rooms[roomId]) {
       callback("Room does not exist");
     } else {
-      global.rooms[roomId].add(socket.id);
+      global.rooms[roomId].users.add(socket.id);
       socket.join(roomId);
-      io.to(roomId).emit("updateUsers", global.rooms[roomId].size);
+      io.to(roomId).emit("updateUsers", global.rooms[roomId].users.size);
       callback("Success");
     }
   });
@@ -28,7 +28,7 @@ export function startRoomListeners(socket) {
 export function handleDisconnect(socket) {
   socket.rooms.forEach((roomId) => {
     if (v == socket.id) return;
-    global.rooms[roomId].remove(socket.id);
-    io.to(roomId).emit("updateUsers", global.rooms[roomId].size);
+    global.rooms[roomId].users.remove(socket.id);
+    io.to(roomId).emit("updateUsers", global.rooms[roomId].users.size);
   });
 }
