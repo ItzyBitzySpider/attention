@@ -101,7 +101,9 @@ export class PVPGameState extends GameState {
     }
 
     if (this.changedHearts) {
-      global.io.to(socketId).emit("hearts", heartsToCoordinates(this.hearts));
+      global.io
+        .to(this.roomId)
+        .emit("hearts", heartsToCoordinates(this.hearts));
       this.changedHearts = false;
     }
   }
@@ -146,7 +148,7 @@ export class PVPGameState extends GameState {
 
         this.lives[oppSocketId]--;
         this.changedLives = true;
-        global.io.to(this.roomId).emit("hit");
+        global.io.to(socketId).emit("hit");
       });
       this.cooldown[socketId] = this.serverTicks + COOLDOWN_LOOPS;
     }
