@@ -71,7 +71,7 @@ export class PVPGameState extends GameState {
       this.cooldown[socketId] = -1;
     });
 
-    this.hearts = generateHearts(mazeSize);
+    this.hearts = generateHearts(this.maze.vert.length);
 
     const START_LOCATIONS = [
       [0, 0],
