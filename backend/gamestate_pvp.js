@@ -99,7 +99,7 @@ export class PVPGameState extends GameState {
         .to(this.roomId)
         .emit("shrinkMaze", this.maze.vert.length - 1 - this.shrinkValue);
 
-      this.locations.forEach((socketId, [x, y]) => {
+      Object.entries(this.locations).forEach((socketId, [x, y]) => {
         if (
           x < this.shrinkValue ||
           x > this.maze.vert.length - 1 - this.shrinkValue
