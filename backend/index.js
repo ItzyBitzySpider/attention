@@ -1,25 +1,26 @@
+import "./globals.js";
 import express from "express";
 import { Server } from "socket.io";
 import http from "http";
 import path from "path";
 import { handleDisconnect, startRoomListeners } from "./room.js";
+import { startGameListeners } from "./game.js";
 const __dirname = path.resolve();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+global.io = new Server(server);
 
 app.use(express.static(__dirname + "/public"));
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-const rooms = {};
-
-io.on("connection", (socket) => {
+global.io.on("connection", (socket) => {
   console.log(`${socket.id} connected`);
 
-  startRoomListeners(socket, rooms);
+  startRoomListeners(socket);
+  startGameListeners(socket);
 
   socket.on("ping", (data, ack) => {
     const startTime = Date.now();
@@ -31,7 +32,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`${socket.id} disconnected`);
-    handleDisconnect(socket, rooms);
+    handleDisconnect(socket);
   });
 });
 
