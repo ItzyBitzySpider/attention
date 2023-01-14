@@ -44,6 +44,6 @@ class HeartPickup extends Pickup {
           mazeHelper: mazeHelper,
           positionX: positionX,
           positionY: positionY,
-          spritePath: 'heart_icon.png',
+          spritePath: 'heart_icon_colored.png',
         );
 }
