@@ -1,18 +1,21 @@
 import Loop from "accurate-game-loop";
 
 const LOOP_FPS = 5;
+const MAX_LATENCY_MS = 200;
+const MAX_STATE_CACHE_SIZE = Math.ceil(MAX_LATENCY_MS(1000 / LOOP_FPS));
 
+//TODO time based event to shrink maze or end game
 export class GameState {
   constructor(roomId) {
     this.roomId = roomId;
-    this.stateCache = {}; //TODO use this to store past and handle clicks
+    this.stateCache = [];
 
     this.locations = {};
     this.packetNumbers = {};
     this.serverTicks = 0;
     this.loop = new Loop(() => this.updatePositions(), LOOP_FPS);
 
-    //TODO get start locations and map
+    //TODO get start locations and maze
   }
 
   startGame() {
@@ -25,21 +28,26 @@ export class GameState {
 
   updatePositions() {
     this.serverTicks++;
+    const currentState = {
+      serverTicks: this.serverTicks,
+      locations: this.locations,
+    };
     for (const [socketId, packetNum] of Object.entries(this.packetNumbers)) {
-      // console.log(socketId, packetNum, {
-      //   packetNumber: packetNum,
-      //   serverTicks: this.serverTicks,
-      //   locations: this.locations,
-      // });
-      global.io.to(socketId).emit("playerLocations", {
+      const tmpState = {
         packetNumber: packetNum,
-        serverTicks: this.serverTicks,
-        locations: this.locations,
-      });
+        ...currentState,
+      };
+      console.log(socketId, packetNum, tmpState);
+      global.io.to(socketId).emit("playerLocations", tmpState);
     }
+    this.stateCache.push(currentState);
+    if (this.stateCache.length > MAX_STATE_CACHE_SIZE) this.stateCache.shift();
   }
 
   processInput(socketId, serverTicks, newInput, packetNum) {
+    //Void input if latency from client too high
+    if (serverTicks < this.stateCache[0].serverTicks) return;
+
     if ((1 << 0) & newInput) {
       this.locations[socketId][0] -= 50;
     }
