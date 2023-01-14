@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:attention_game/game/types/gamemode.dart';
 import 'package:attention_game/screens/maze_widget.dart';
 
-class Gameplay extends StatelessWidget {
+import '../gameplay/handler.dart';
+
+class Gameplay extends StatefulWidget {
   final GameMode gamemode;
 
   const Gameplay({super.key, required this.gamemode});
+
+  @override
+  State<Gameplay> createState() => _GameplayState();
+}
+
+class _GameplayState extends State<Gameplay> {
+  @override
+  void initState() {
+    Handler.startGameLoop();
+    super.initState();
+  }
 
   Widget leftArea() {
     return Column(

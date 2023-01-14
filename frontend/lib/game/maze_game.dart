@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:attention_game/colors.dart';
+import 'package:attention_game/game/enemy.dart';
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/player.dart';
 import 'package:attention_game/game/sample.dart';
@@ -14,11 +15,12 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
 
   late Player player;
   List<Wall> mazeWalls = [];
+  List<Enemy> enemies = [];
 
   @override
   Color backgroundColor() => const Color(MAZE_BACKGROUND_COLOR);
 
-  void spawnMazeWalls(int positionX, int positionY) {
+  void drawWalls(int positionX, int positionY) {
     removeAll(mazeWalls);
     mazeWalls = [];
 
@@ -53,6 +55,19 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     addAll(mazeWalls);
   }
 
+  void drawEnemy(int positionX, int positionY) {
+    removeAll(enemies);
+    enemies = [];
+
+    if ((positionX - player.positionX).abs() < 2 &&
+        (positionY - player.positionY).abs() < 2) {
+      enemies.add(Enemy(
+          mazeHelper: mazeHelper, positionX: positionX, positionY: positionY));
+    }
+
+    addAll(enemies);
+  }
+
   void spawnPlayer(int positionX, int positionY) {
     player = Player(
       mazeHelper: mazeHelper,
@@ -79,6 +94,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   void update(double dt) {
     super.update(dt);
 
-    spawnMazeWalls(player.positionX, player.positionY);
+    drawWalls(player.positionX, player.positionY);
+    drawEnemy(10, 10);
   }
 }
