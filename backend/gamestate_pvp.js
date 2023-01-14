@@ -126,6 +126,9 @@ export class PVPGameState extends GameState {
         lives: this.lives,
         playersLeft,
       });
+
+      if (playersLeft <= 1) this.endGame();
+
       this.changedLives = false;
     }
 
@@ -148,20 +151,20 @@ export class PVPGameState extends GameState {
       this.changedHearts = true;
     }
 
-    //Void input if latency from client too high
-    if (this.stateCache[0] && serverTicks < this.stateCache[0].serverTicks) {
-      console.warn(
-        "Rejected",
-        socketId,
-        serverTicks,
-        this.stateCache[0].serverTicks,
-        packetNum
-      );
-      return;
-    }
-
     //Space bar action
     if ((1 << 4) & newInput) {
+      //Void input if latency from client too high
+      if (this.stateCache[0] && serverTicks < this.stateCache[0].serverTicks) {
+        console.warn(
+          "Rejected",
+          socketId,
+          serverTicks,
+          this.stateCache[0].serverTicks,
+          packetNum
+        );
+        return;
+      }
+
       //Cooldown handling
       if (serverTicks < this.cooldown[socketId]) return;
 
