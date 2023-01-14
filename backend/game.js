@@ -11,10 +11,11 @@ export function startGameListeners(socket) {
         global.gameStates[roomId] = new PVPGameState(roomId, 21);
       else global.gameStates[roomId] = new EscapeGameState(roomId, 21);
 
-      global.gameStates[roomId].startGame();
+      const startShrinkCountdown = global.gameStates[roomId].startGame();
       const maze = global.gameStates[roomId].maze;
       ack([maze.horiz, maze.vert]);
       global.io.to(roomId).emit("maze", [maze.horiz, maze.vert]);
+      startShrinkCountdown();
       return;
     }
   });

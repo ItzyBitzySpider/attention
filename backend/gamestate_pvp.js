@@ -64,13 +64,6 @@ export class PVPGameState extends GameState {
   }
 
   startGame() {
-    global.io
-      .to(this.roomId)
-      .emit("shrinkMaze", [
-        FIRST_SHRINK_MS,
-        this.maze.vert.length - this.shrinkValue,
-      ]);
-
     super.startGame();
 
     global.rooms[this.roomId].players.forEach((socketId) => {
@@ -95,6 +88,15 @@ export class PVPGameState extends GameState {
       },
       {}
     );
+
+    return () => {
+      global.io
+        .to(this.roomId)
+        .emit("shrinkMaze", [
+          FIRST_SHRINK_MS,
+          this.maze.vert.length - this.shrinkValue,
+        ]);
+    };
   }
 
   updatePositions() {
