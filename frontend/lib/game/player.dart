@@ -64,11 +64,9 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (event is RawKeyDownEvent && !event.repeat) {
       // Handle movement keys
-      logicalKeyboardKeyToDirection.forEach((logicalKey, direction) {
-        if (keysPressed.contains(logicalKey)) {
-          movePlayer(direction);
-        }
-      });
+      if (logicalKeyboardKeyToDirection.containsKey(event.logicalKey)) {
+        movePlayer(logicalKeyboardKeyToDirection[event.logicalKey]!);
+      }
 
       // Handle spacebar
       if (keysPressed.contains(LogicalKeyboardKey.space)) {
