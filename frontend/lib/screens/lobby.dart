@@ -32,12 +32,9 @@ class _LobbyState extends State<Lobby> {
       if (mounted) {
         setState(() {
           roomcode = roomId;
-          print("SETTING STATE ${Handler.roomId} ${roomId} ${roomcode}");
         });
       } else {
         roomcode = roomId;
-        print(
-            "SETTING STATE without mount ${Handler.roomId} ${roomId}  ${roomcode}");
       }
     });
     super.initState();

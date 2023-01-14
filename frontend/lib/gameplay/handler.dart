@@ -8,9 +8,7 @@ class Handler {
   static Function render = () {};
   static Socket socket = getSocket();
   static int packetsSent = 0;
-  static String get room {
-    return roomId;
-  }
+
   static List<Map<String, int>> packetCache = [];
   static int serverTicks = 0;
   static Map<String, List<int>> locations = {};
@@ -47,8 +45,8 @@ class Handler {
     // print('test');
     socket.emitWithAck('createRoom', gamemode, ack: (data) {
       roomId = data;
+      callback(roomId);
     });
-    callback();
   }
 
   static void joinRoom(room, callback) {
