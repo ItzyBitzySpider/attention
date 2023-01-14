@@ -36,17 +36,18 @@ class Network {
   }
 
   applyPacket(locations, input) {
+    //TODO maze collision recognition
     if ((1 << 0) & input) {
-      locations[this.socket.id][0] -= 50;
+      locations[this.socket.id][0]--;
     }
     if ((1 << 1) & input) {
-      locations[this.socket.id][0] += 50;
+      locations[this.socket.id][0]++;
     }
     if ((1 << 2) & input) {
-      locations[this.socket.id][1] -= 50;
+      locations[this.socket.id][1]--;
     }
     if ((1 << 3) & input) {
-      locations[this.socket.id][1] += 50;
+      locations[this.socket.id][1]++;
     }
   }
 

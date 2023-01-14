@@ -58,17 +58,18 @@ export class GameState {
       return;
     }
 
+    const [x, y] = this.locations[socketId];
     if ((1 << 0) & newInput) {
-      this.locations[socketId][0] -= 50;
+      if (!this.maze.horiz[y][x]) this.locations[socketId][0]--;
     }
     if ((1 << 1) & newInput) {
-      this.locations[socketId][0] += 50;
+      if (!this.maze.horiz[y][x + 1]) this.locations[socketId][0]++;
     }
     if ((1 << 2) & newInput) {
-      this.locations[socketId][1] -= 50;
+      if (!this.maze.vert[y][x]) this.locations[socketId][1]--;
     }
     if ((1 << 3) & newInput) {
-      this.locations[socketId][1] += 50;
+      if (!this.maze.vert[y + 1][x]) this.locations[socketId][1]++;
     }
 
     this.packetNumbers[socketId] = packetNum;
