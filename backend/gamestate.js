@@ -26,7 +26,7 @@ export class GameState {
 
     this.maze = new Maze(
       [mazeSize, mazeSize - 2, mazeSize - 4, mazeSize - 6, mazeSize - 8],
-      0.3
+      0.15
     );
   }
 
