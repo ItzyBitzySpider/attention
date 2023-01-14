@@ -61,14 +61,14 @@ export class GameState {
     const [x, y] = this.locations[socketId];
     if ((1 << 0) & newInput) {
       if (!this.maze.vert[y][x] && x > this.shrinkValue)
-        this.locations[socketId][0] -= 1;
+        this.locations[socketId][0]--;
     }
     if ((1 << 1) & newInput) {
       if (
         !this.maze.vert[y][x + 1] &&
         x < this.maze.vert.length - 2 - this.shrinkValue
       )
-        this.locations[socketId][0] += 1;
+        this.locations[socketId][0]++;
     }
     if ((1 << 2) & newInput) {
       if (!this.maze.horiz[y][x] && y > this.shrinkValue)
@@ -86,6 +86,7 @@ export class GameState {
 
   endGame() {
     this.loop.stop();
+    global.io.to(this.roomId).emit("gameEnd");
   }
 
   removePlayer(socketId) {

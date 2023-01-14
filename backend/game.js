@@ -3,7 +3,6 @@ import { EscapeGameState } from "./gamestate_escape.js";
 
 export function startGameListeners(socket) {
   socket.on("startGame", (_, ack) => {
-    console.log(ack);
     const arr = Array.from(socket.rooms);
     for (const roomId of arr) {
       if (roomId === socket.id) continue;
