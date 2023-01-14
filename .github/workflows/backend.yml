@@ -21,10 +21,11 @@ jobs:
           script: |
             ls
             cd /home/yuna/attention
-            git checkout main
+            git checkout main || true # Force return true so exit code is not 1
             # Pull from git repo
             git pull
             # Backend CD
             killall node || true # Force return true so exit code is not 1
+            yarn install
             yarn prod
             
