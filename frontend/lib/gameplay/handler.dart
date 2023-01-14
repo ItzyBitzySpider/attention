@@ -72,7 +72,7 @@ class Handler {
   }
 
   static void startGame() {
-    socket.emit('startGame', roomId);
+    socket.emitWithAck('startGame', roomId, ack: (data) {});
   }
 
   static void setSpectator(isSpectator) {
@@ -100,7 +100,7 @@ class Handler {
       serverTicks = data['serverTicks'];
       // print(data['locations'].toString());
       // parse json
-      
+
       locations = json.decode(data['locations']);
       packetCache.forEach((p) {
         applyPacket(locations, p["input"]);

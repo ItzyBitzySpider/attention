@@ -2,7 +2,8 @@ import { PVPGameState } from "./gamestate_pvp.js";
 import { EscapeGameState } from "./gamestate_escape.js";
 
 export function startGameListeners(socket) {
-  socket.on("startGame", (params, callback) => {
+  socket.on("startGame", (_, ack) => {
+    console.log(ack);
     const arr = Array.from(socket.rooms);
     for (const roomId of arr) {
       if (roomId === socket.id) continue;
@@ -13,7 +14,7 @@ export function startGameListeners(socket) {
 
       global.gameStates[roomId].startGame();
       const maze = global.gameStates[roomId].maze;
-      callback([maze.horiz, maze.vert]);
+      ack([maze.horiz, maze.vert]);
       global.io.to(roomId).emit("maze", [maze.horiz, maze.vert]);
       return;
     }
