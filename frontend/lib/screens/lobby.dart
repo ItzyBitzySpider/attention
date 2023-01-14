@@ -23,20 +23,24 @@ class Lobby extends StatefulWidget {
 
 class _LobbyState extends State<Lobby> {
   PlayerType playerType = PlayerType.player;
-  late String roomcode = '';
+  String roomcode = '';
   int playerCount = 6;
 
   @override
   void initState() {
-    Handler.createRoom(gamemodeToString(widget.gamemode), populateroomcode);
-    super.initState();
-  }
-
-  void populateroomcode(){
-    setState(() {
-      roomcode = Handler.roomId;
+    Handler.createRoom(gamemodeToString(widget.gamemode), (roomId) {
+      if (mounted) {
+        setState(() {
+          roomcode = roomId;
+          print("SETTING STATE ${Handler.roomId} ${roomId} ${roomcode}");
+        });
+      } else {
+        roomcode = roomId;
+        print(
+            "SETTING STATE without mount ${Handler.roomId} ${roomId}  ${roomcode}");
+      }
     });
-      // print(Handler.room);
+    super.initState();
   }
 
   @override
