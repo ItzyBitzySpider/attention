@@ -1,4 +1,4 @@
-import { MS_PER_LOOP, GameState } from "./gamestate.js";
+import { MS_PER_LOOP, GameState, COOLDOWN_LOOPS } from "./gamestate.js";
 
 const CHUNK_SIZE = 3;
 const SPAWN_PROBABILITY = 0.2;
@@ -64,6 +64,13 @@ export class PVPGameState extends GameState {
   }
 
   startGame() {
+    global.io
+      .to(this.roomId)
+      .emit("shrinkMaze", [
+        FIRST_SHRINK_MS,
+        this.maze.vert.length - this.shrinkValue,
+      ]);
+
     super.startGame();
 
     global.rooms[this.roomId].players.forEach((socketId) => {
@@ -97,7 +104,10 @@ export class PVPGameState extends GameState {
       this.shrinkValue++;
       global.io
         .to(this.roomId)
-        .emit("shrinkMaze", this.maze.vert.length - 1 - this.shrinkValue);
+        .emit("shrinkMaze", [
+          TIME_SHRINK_MS,
+          this.maze.vert.length - this.shrinkValue,
+        ]);
 
       Object.entries(this.locations).forEach(([socketId, [x, y]]) => {
         if (
@@ -170,10 +180,10 @@ export class PVPGameState extends GameState {
 
       const locations = this.stateCache.filter(
         (v) => v.serverTicks === serverTicks
-      )[0];
+      )[0].locations;
 
       const [x, y] = locations[socketId];
-      Object.entries(locations).forEach((oppSocketId, [oppX, oppY]) => {
+      Object.entries(locations).forEach(([oppSocketId, [oppX, oppY]]) => {
         if (oppSocketId === socketId) return;
         if (Math.abs(x - oppX) > 1) return;
         if (Math.abs(y - oppY) > 1) return;

@@ -21,6 +21,7 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   }
 
   void earthquake() {
+    Handler.sendInput(1 << 4);
     // TODO handle earthquake here
   }
 
@@ -75,7 +76,7 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
       }
 
       // Handle spacebar
-      if (keysPressed.contains(LogicalKeyboardKey.space)) {
+      if (event.logicalKey == LogicalKeyboardKey.space) {
         earthquake();
       }
     }
