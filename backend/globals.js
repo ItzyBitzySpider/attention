@@ -1,0 +1,2 @@
+global.rooms = {};
+global.gameStates = {};

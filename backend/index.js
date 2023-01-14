@@ -14,12 +14,10 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-const rooms = {};
-
 io.on("connection", (socket) => {
   console.log(`${socket.id} connected`);
 
-  startRoomListeners(socket, rooms);
+  startRoomListeners(socket);
 
   socket.on("ping", (data, ack) => {
     const startTime = Date.now();
@@ -31,7 +29,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`${socket.id} disconnected`);
-    handleDisconnect(socket, rooms);
+    handleDisconnect(socket);
   });
 });
 
