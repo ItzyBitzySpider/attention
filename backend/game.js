@@ -23,6 +23,7 @@ export function startGameListeners(socket) {
     const arr = Array.from(socket.rooms);
     for (const roomId of arr) {
       if (roomId === socket.id) continue;
+      if (!global.gameStates[roomId]) continue;
       global.gameStates[roomId].processInput(
         socket.id,
         serverTicks,
