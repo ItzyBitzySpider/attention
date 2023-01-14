@@ -10,6 +10,7 @@ import 'package:attention_game/game/wall.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 import '../gameplay/handler.dart';
 import '../utils/sockets.dart';
@@ -191,10 +192,10 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   @override
   Future<void> onLoad() async {
     double screenSize = min(size.x, size.y);
-
+    //cast to bool;
     mazeHelper = MazeHelper(
-      vertical: vertical,
-      horizontal: horizontal,
+      vertical: Handler.maze[1],
+      horizontal: Handler.maze[0],
       screenSize: screenSize,
     );
 

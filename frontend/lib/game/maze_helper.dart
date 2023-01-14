@@ -5,8 +5,8 @@ class MazeHelper {
   late int positionMax;
   late double wallThickness;
   late double playerSize;
-  late List<List<bool>> vertical;
-  late List<List<bool>> horizontal;
+  late List<dynamic> vertical;
+  late List<dynamic> horizontal;
   late double screenSize;
 
   MazeHelper({

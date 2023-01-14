@@ -9,6 +9,7 @@ class Handler {
   static String roomId = '';
   static Socket socket = getSocket();
   static int packetsSent = 0;
+  static List<dynamic> maze = [];
 
   static List<Map<String, int>> packetCache = [];
   static int serverTicks = 0;
@@ -72,7 +73,7 @@ class Handler {
   }
 
   static void startGame() {
-    socket.emit('startGame', roomId);
+    socket.emitWithAck('startGame', roomId, ack: (data) {});
   }
 
   static void setSpectator(isSpectator) {
@@ -85,14 +86,13 @@ class Handler {
 
   static void listenForStart(callback) {
     socket.on('maze', (data) {
-      print(data);
+      maze = data;
       callback();
     });
   }
 
   static void startGameLoop() {
     socket.on('playerLocations', (data) {
-      print(data);
       packetCache = packetCache
           .where((p) => ((p["packetNumber"] ?? 0) > data['packetNumber']))
           .toList();
@@ -100,7 +100,7 @@ class Handler {
       serverTicks = data['serverTicks'];
       // print(data['locations'].toString());
       // parse json
-      
+
       locations = json.decode(data['locations']);
       packetCache.forEach((p) {
         applyPacket(locations, p["input"]);

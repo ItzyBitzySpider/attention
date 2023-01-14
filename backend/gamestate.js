@@ -42,7 +42,7 @@ export class GameState {
     this.serverTicks++;
     const currentState = {
       serverTicks: this.serverTicks,
-      locations: this.locations,
+      locations: JSON.parse(JSON.stringify(this.locations)),
     };
     for (const [socketId, packetNum] of Object.entries(this.packetNumbers)) {
       const tmpState = {
@@ -50,7 +50,7 @@ export class GameState {
         ...currentState,
       };
       tmpState.locations = JSON.stringify(tmpState.locations);
-      console.log(socketId, packetNum, tmpState);
+      // console.log(socketId, packetNum, tmpState);
       global.io.to(socketId).emit("playerLocations", tmpState);
     }
     this.stateCache.push(currentState);
@@ -60,28 +60,27 @@ export class GameState {
   processInput(socketId, serverTicks, newInput, packetNum) {
     const [x, y] = this.locations[socketId];
     if ((1 << 0) & newInput) {
-      if (!this.maze.horiz[y][x] && x > this.shrinkValue)
-        this.locations[socketId][0]--;
+      if (!this.maze.vert[y][x] && x > this.shrinkValue)
+        this.locations[socketId][0] -= 1;
     }
     if ((1 << 1) & newInput) {
       if (
-        !this.maze.horiz[y][x + 1] &&
-        x < this.maze.vert.length - 1 - this.shrinkValue
+        !this.maze.vert[y][x + 1] &&
+        x < this.maze.vert.length - 2 - this.shrinkValue
       )
-        this.locations[socketId][0]++;
+        this.locations[socketId][0] += 1;
     }
     if ((1 << 2) & newInput) {
-      if (!this.maze.vert[y][x] && y > this.shrinkValue)
+      if (!this.maze.horiz[y][x] && y > this.shrinkValue)
         this.locations[socketId][1]--;
     }
     if ((1 << 3) & newInput) {
       if (
-        !this.maze.vert[y + 1][x] &&
-        y < this.maze.vert.length - 1 - this.shrinkValue
+        !this.maze.horiz[y + 1][x] &&
+        y < this.maze.vert.length - 2 - this.shrinkValue
       )
         this.locations[socketId][1]++;
     }
-
     this.packetNumbers[socketId] = packetNum;
   }
 
