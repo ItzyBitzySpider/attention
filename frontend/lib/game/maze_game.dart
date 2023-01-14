@@ -1,15 +1,15 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:attention_game/colors.dart';
 import 'package:attention_game/game/enemy.dart';
+import 'package:attention_game/game/pickup.dart';
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/player.dart';
-import 'package:attention_game/game/sample.dart';
 import 'package:attention_game/game/wall.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 import '../gameplay/handler.dart';
 import '../utils/sockets.dart';
@@ -20,6 +20,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   late Player player;
   List<Wall> mazeWalls = [];
   List<Enemy> enemies = [];
+  List<Pickup> pickups = [];
 
   int shrinkExtent = 0;
 
@@ -154,8 +155,43 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     shrinkExtent++;
   }
 
+  void spawnPickup(int positionX, int positionY) {
+    KeyPickup key = KeyPickup(
+      mazeHelper: mazeHelper,
+      positionX: positionX,
+      positionY: positionY,
+    );
+
+    pickups.add(key);
+    add(key);
+  }
+
+  void spawnHeart(int positionX, int positionY) {
+    HeartPickup heart = HeartPickup(
+      mazeHelper: mazeHelper,
+      positionX: positionX,
+      positionY: positionY,
+    );
+
+    pickups.add(heart);
+    add(heart);
+  }
+
+  void removePickup(int positionX, int positionY) {
+    for (int i = 0; i < pickups.length; i++) {
+      if (pickups[i].positionX == positionX &&
+          pickups[i].positionY == positionY) {
+        remove(pickups[i]);
+        pickups.removeAt(i);
+        break;
+      }
+    }
+  }
+
   @override
   Future<void> onLoad() async {
+    await Future.delayed(Duration(seconds: 1));
+    print('teststring');
     double screenSize = min(size.x, size.y);
     //cast to bool;
     mazeHelper = MazeHelper(
@@ -165,6 +201,8 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     );
 
     spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
+    spawnHeart(0, 1);
+    spawnHeart(5, 1);
   }
 
   @override
@@ -175,5 +213,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     Handler.locations.forEach((key, value) {
       if (getSocket().id != key) drawEnemy(value[0], value[1]);
     });
+
+    removePickup(player.positionX, player.positionY);
   }
 }
