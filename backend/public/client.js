@@ -35,18 +35,18 @@ class Network {
     );
   }
 
-  applyPacket(state, input) {
+  applyPacket(locations, input) {
     if ((1 << 0) & input) {
-      state[this.socket.id][0] -= 50;
+      locations[this.socket.id][0] -= 50;
     }
     if ((1 << 1) & input) {
-      state[this.socket.id][0] += 50;
+      locations[this.socket.id][0] += 50;
     }
     if ((1 << 2) & input) {
-      state[this.socket.id][1] -= 50;
+      locations[this.socket.id][1] -= 50;
     }
     if ((1 << 3) & input) {
-      state[this.socket.id][1] += 50;
+      locations[this.socket.id][1] += 50;
     }
   }
 
