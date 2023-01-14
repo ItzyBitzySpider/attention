@@ -227,17 +227,15 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   void drawHearts() {
     removeAll(pickups);
     pickups = [];
+    // print(Handler.hearts);
+    for (var p in Handler.hearts) {
+      int x = p[0];
+      int y = p[1];
 
-    for (final p in Handler.hearts) {
-      int positionX = p[0];
-      int positionY = p[1];
-
-      if ((positionX - player.positionX).abs() < 2 &&
-          (positionY - player.positionY).abs() < 2) {
-        pickups.add(HeartPickup(
-            mazeHelper: mazeHelper,
-            positionX: positionX,
-            positionY: positionY));
+      if ((x - player.positionX).abs() < 2 &&
+          (y - player.positionY).abs() < 2) {
+      pickups.add(HeartPickup(
+          mazeHelper: mazeHelper, positionX: x, positionY: y));
       }
     }
 
@@ -248,6 +246,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   Future<void> onLoad() async {
     await Future.delayed(const Duration(seconds: 1));
     double screenSize = min(size.x, size.y);
+    print(Handler.hearts);
     //cast to bool;
     mazeHelper = MazeHelper(
       vertical: Handler.maze[1],

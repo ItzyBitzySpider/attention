@@ -100,7 +100,10 @@ export class PVPGameState extends GameState {
   updatePositions() {
     super.updatePositions();
 
-    if (this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP) {
+    if (
+      this.shrinkValue < 7 &&
+      this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
+    ) {
       this.shrinkValue++;
       global.io
         .to(this.roomId)
@@ -129,12 +132,15 @@ export class PVPGameState extends GameState {
     }
 
     if (this.changedLives) {
-      const playersLeft = Object.values(this.lives).filter(
-        (v) => v >= 0
-      ).length;
+      const playersLeft = Object.values(this.lives).filter((v) => v > 0).length;
       global.io.to(this.roomId).emit("updateLives", {
-        lives: this.lives,
+        lives: JSON.stringify(this.lives),
         playersLeft,
+      });
+
+      Object.entries(this.lives).filter(([socketId, live]) => {
+        if (live <= 0 && this.locations[socketId])
+          delete this.locations[socketId];
       });
 
       if (playersLeft <= 1) this.endGame();
