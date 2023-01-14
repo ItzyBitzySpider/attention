@@ -100,7 +100,7 @@ class _LobbyState extends State<Lobby> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
+              SelectableText(
                 value,
                 style: const TextStyle(
                   fontSize: DETAIL_TEXT_VALUE_SIZE,
