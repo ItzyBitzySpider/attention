@@ -18,7 +18,8 @@ class Pickup extends SpriteComponent with HasGameRef {
   Future<void> onLoad() async {
     super.onLoad();
     sprite = await gameRef.loadSprite(spritePath);
-    position.setFrom(mazeHelper.positionToCoordinates(positionX, positionY));
+    position.setFrom(mazeHelper.positionToCoordinates(positionX, positionY) +
+        Vector2(mazeHelper.wallThickness, mazeHelper.wallThickness));
   }
 }
 
