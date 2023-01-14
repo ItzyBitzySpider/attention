@@ -1,5 +1,6 @@
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/types/direction.dart';
+import 'package:attention_game/gameplay/handler.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 
@@ -22,33 +23,38 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
     // TODO handle earthquake here
   }
 
+  void drawPlayerPosition() {
+    position.setFrom(mazeHelper.positionToCoordinates(positionX, positionY) +
+        Vector2(mazeHelper.wallThickness, mazeHelper.wallThickness));
+  }
+
   void movePlayer(Direction direction) {
     switch (direction) {
       case Direction.up:
         if (!mazeHelper.hasTopWall(positionX, positionY)) {
-          position.add(Vector2(0, -playerMovementDistance));
-          positionY--;
+          Handler.sendInput(1 << 2);
         }
         break;
       case Direction.down:
         if (!mazeHelper.hasBottomWall(positionX, positionY)) {
-          position.add(Vector2(0, playerMovementDistance));
-          positionY++;
+          Handler.sendInput(1 << 3);
         }
         break;
       case Direction.left:
         if (!mazeHelper.hasLeftWall(positionX, positionY)) {
-          position.add(Vector2(-playerMovementDistance, 0));
-          positionX--;
+          Handler.sendInput(1 << 0);
         }
         break;
       case Direction.right:
         if (!mazeHelper.hasRightWall(positionX, positionY)) {
-          position.add(Vector2(playerMovementDistance, 0));
-          positionX++;
+          Handler.sendInput(1 << 1);
         }
         break;
     }
+    var _loc = Handler.ownLocation;
+    positionX = _loc[0];
+    positionY = _loc[1];
+    drawPlayerPosition();
   }
 
   @override
@@ -56,8 +62,7 @@ class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
     super.onLoad();
     sprite = await gameRef.loadSprite('player_sprite.png');
 
-    position = mazeHelper.positionToCoordinates(positionX, positionY) +
-        Vector2(mazeHelper.wallThickness, mazeHelper.wallThickness);
+    drawPlayerPosition();
   }
 
   @override

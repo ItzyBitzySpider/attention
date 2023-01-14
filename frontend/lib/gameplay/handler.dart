@@ -31,7 +31,12 @@ class Handler {
     }
   }
 
-  static void sendInput(input) {
+  static get ownLocation {
+    var _loc = locations[socket.id] ?? [0, 0];
+    return [_loc[0], _loc[1]];
+  }
+
+  static void sendInput(int input) {
     Map<String, int> packet = {
       'packetNumber': packetsSent,
       'input': input,
