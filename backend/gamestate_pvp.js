@@ -129,9 +129,7 @@ export class PVPGameState extends GameState {
     }
 
     if (this.changedLives) {
-      const playersLeft = Object.values(this.lives).filter(
-        (v) => v >= 0
-      ).length;
+      const playersLeft = Object.values(this.lives).filter((v) => v > 0).length;
       global.io.to(this.roomId).emit("updateLives", {
         lives: JSON.stringify(this.lives),
         playersLeft,
