@@ -1,4 +1,4 @@
-import { MS_PER_LOOP, GameState } from "./gamestate";
+import { MS_PER_LOOP, GameState } from "./gamestate.js";
 
 const CHUNK_SIZE = 3;
 const SPAWN_PROBABILITY = 0.2;
@@ -75,7 +75,7 @@ export class PVPGameState extends GameState {
 
     const START_LOCATIONS = [
       [0, 0],
-      [this.mazeBounds[0][1], 0],
+      [this.maze.vert.length - 1, 0],
       [0, this.mazeBounds[1][1]],
       [this.mazeBounds[0][1], this.mazeBounds[1][1]],
     ];
