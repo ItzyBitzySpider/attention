@@ -22,11 +22,13 @@ jobs:
             ls
             cd /home/yuna/attention
             git checkout main || true # Force return true so exit code is not 1
+            
             # Pull from git repo
             git pull
+            
             # Backend CD
+            export PATH=$PATH:"/home/yuna/.nvm/versions/node/v18.13.0/bin/yarn"
             killall node || true # Force return true so exit code is not 1
-            npm install -g yarn
             yarn install
             yarn prod
             
