@@ -3,7 +3,7 @@ function generateRoomId() {
 }
 
 export function startRoomListeners(socket, rooms) {
-  socket.on("createRoom", ({ roomId, gameMode }, callback) => {
+  socket.on("createRoom", (gameMode, callback) => {
     const roomId = generateRoomId();
     rooms[roomId] = { users: new Set([socket.id]), gameMode };
     socket.join(roomId);

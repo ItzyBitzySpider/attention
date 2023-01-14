@@ -1,11 +1,11 @@
 import express from "express";
-import socketIo from "socket.io";
+import { Server } from "socket.io";
 import http from "http";
-import { handleDisconnect, startRoomListeners } from "./room";
+import { handleDisconnect, startRoomListeners } from "./room.js";
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = new Server(server);
 
 const rooms = {};
 
