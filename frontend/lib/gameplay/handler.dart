@@ -5,13 +5,16 @@ import '../utils/sockets.dart';
 
 class Handler {
   static String roomId = '';
-  static Function render = () {};
   static Socket socket = getSocket();
   static int packetsSent = 0;
 
   static List<Map<String, int>> packetCache = [];
   static int serverTicks = 0;
   static Map<String, List<int>> locations = {};
+
+  static List<List> hearts = [];
+  static int playersLeft = 0;
+  static Map<String, int> lives = {};
 
   static void applyPacket(locations, input) {
     if (((1 << 0) & input) != 0) {
@@ -38,11 +41,9 @@ class Handler {
     socket.emit('playerInput', packet);
     packetsSent++;
     applyPacket(locations, input);
-    render(locations);
   }
 
   static void createRoom(gamemode, callback) {
-    // print('test');
     socket.emitWithAck('createRoom', gamemode, ack: (data) {
       roomId = data;
       callback(roomId);
@@ -82,9 +83,7 @@ class Handler {
     });
   }
 
-  static void startGameLoop(renderFn) {
-    render = renderFn;
-
+  static void startGameLoop(shrinkMazeFn, hitFn) {
     socket.on('playerLocations', (data) {
       print(data);
       packetCache = packetCache
@@ -96,7 +95,21 @@ class Handler {
       packetCache.forEach((p) {
         applyPacket(locations, p["input"]);
       });
-      render(locations);
     });
+
+    socket.on('hearts', (data) {
+      hearts = data;
+    });
+
+    socket.on('updateLives', (data) {
+      lives = data['lives'];
+      playersLeft = data['playersLeft'];
+    });
+
+    socket.on('shrinkMaze', (newMazeSize) {
+      shrinkMazeFn(newMazeSize);
+    });
+
+    socket.on('hit', hitFn);
   }
 }
