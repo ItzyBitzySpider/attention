@@ -14,8 +14,14 @@ const double DETAIL_TEXT_VALUE_SIZE = 30;
 
 class Lobby extends StatefulWidget {
   final GameMode gamemode;
+  final String roomcode;
+  final int playerCount;
 
-  const Lobby({super.key, required this.gamemode});
+  const Lobby(
+      {super.key,
+      required this.gamemode,
+      this.roomcode = '',
+      this.playerCount = 2});
 
   @override
   State<Lobby> createState() => _LobbyState();
@@ -24,18 +30,29 @@ class Lobby extends StatefulWidget {
 class _LobbyState extends State<Lobby> {
   PlayerType playerType = PlayerType.player;
   String roomcode = '';
-  int playerCount = 6;
+  int playerCount = 1;
 
   @override
   void initState() {
-    Handler.createRoom(gamemodeToString(widget.gamemode), (roomId) {
-      if (mounted) {
-        setState(() {
+    if (widget.roomcode != '') {
+      roomcode = widget.roomcode;
+      playerCount = widget.playerCount;
+    } else {
+      Handler.createRoom(gamemodeToString(widget.gamemode), (roomId) {
+        if (mounted) {
+          setState(() {
+            roomcode = roomId;
+          });
+        } else {
           roomcode = roomId;
-        });
-      } else {
-        roomcode = roomId;
-      }
+        }
+      });
+    }
+
+    Handler.updatePlayerCount((count) {
+      setState(() {
+        playerCount = count;
+      });
     });
     super.initState();
   }

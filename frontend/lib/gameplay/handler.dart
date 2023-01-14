@@ -51,8 +51,15 @@ class Handler {
 
   static void joinRoom(room, callback) {
     socket.emitWithAck('joinRoom', room, ack: (data) {
-      if (data == 'Success') roomId = room;
-      callback(data);
+      if (data['gameMode'] != '') roomId = room;
+      print(data);
+      callback(data['gameMode'], data['numPlayers']);
+    });
+  }
+
+  static void updatePlayerCount(updateCount) {
+    socket.on('updateUsers', (data) {
+      updateCount(data);
     });
   }
 

@@ -18,13 +18,15 @@ class _JoinGameButtonState extends State<JoinGameButton> {
   String? roomCode;
 
   void _enterButtonPressed() {
-    print("Trying");
-    Handler.joinRoom(roomCode, (res) {
-      if (res == 'Success') {
+    Handler.joinRoom(roomCode, (game, playerCount) {
+      if (game != '') {
+        // print(game);
+        GameMode gm = game == 'PVP' ? GameMode.pvp : GameMode.escape;
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const Lobby(gamemode: GameMode.none),
+              builder: (context) => Lobby(
+                  gamemode: gm, roomcode: roomCode!, playerCount: playerCount),
             ));
       } else {
         print("Failed");
