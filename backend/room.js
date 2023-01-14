@@ -7,7 +7,7 @@ export function startRoomListeners(socket) {
     const roomId = generateRoomId();
     console.log(socket.id, "create:", roomId);
     global.rooms[roomId] = {
-      users: new Set([socket.id]),
+      players: new Set([socket.id]),
       gameMode,
       spectators: new Set(),
     };

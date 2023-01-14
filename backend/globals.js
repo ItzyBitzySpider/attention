@@ -1,7 +1,11 @@
 import { GameState } from "./gamestate.js";
 
 global.rooms = {
-  INSERT_ROOM_ID: { users: new Set(), gameMode: "test", spectators: new Set() },
+  INSERT_ROOM_ID: {
+    players: new Set(),
+    gameMode: "test",
+    spectators: new Set(),
+  },
 };
 global.gameStates = { INSERT_ROOM_ID: new GameState("INSERT_ROOM_ID", 21) };
 /*
