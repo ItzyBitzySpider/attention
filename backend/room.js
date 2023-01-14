@@ -1,4 +1,4 @@
-import { createGame } from "./game";
+import { createGame } from "./game.js";
 
 function generateRoomId() {
   return Math.random().toString(36).substring(2, 8).toLowerCase();
