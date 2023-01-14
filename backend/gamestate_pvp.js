@@ -3,17 +3,38 @@ import { MS_PER_LOOP, GameState } from "./gamestate";
 const CHUNK_SIZE = 3;
 const SPAWN_PROBABILITY = 0.2;
 
+//taken from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array?page=1&tab=scoredesc#tab-top
+function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+  return array;
+}
+
 function generateHearts(mazeSize) {
-  const hearts = new Set();
+  let chunks = [];
   for (let i = 0; i < mazeSize; i += CHUNK_SIZE) {
     for (let j = 0; j < mazeSize; j += CHUNK_SIZE) {
-      if (Math.random() > SPAWN_PROBABILITY) continue;
-      const x = i + Math.floor(Math.random() * CHUNK_SIZE);
-      const y = j + Math.floor(Math.random() * CHUNK_SIZE);
-
-      if (x < mazeSize && y < mazeSize) hearts.add(`${x},${y}`);
+      chunks.push([i, j]);
     }
   }
+  chunks = shuffle(chunks);
+
+  const hearts = new Set();
+  for (let k = 0; k < SPAWN_PROBABILITY * chunks.length; k++) {
+    const [i, j] = chunks[k];
+    const x = i + Math.floor(Math.random() * CHUNK_SIZE);
+    const y = j + Math.floor(Math.random() * CHUNK_SIZE);
+    if (x < mazeSize && y < mazeSize) hearts.add(`${x},${y}`);
+  }
+
   return hearts;
 }
 
