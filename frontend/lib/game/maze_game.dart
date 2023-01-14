@@ -174,6 +174,5 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     Handler.locations.forEach((key, value) {
       if (getSocket().id != key) drawEnemy(value[0], value[1]);
     });
-    drawEnemy(10, 10);
   }
 }
