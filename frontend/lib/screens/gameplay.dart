@@ -47,7 +47,7 @@ class _GameplayState extends State<Gameplay> {
 
   @override
   void initState() {
-    Handler.startGameLoop();
+    Handler.startGameLoop(false);
     Handler.pvp(() {}, updatePlayersLeft, updateLivesLeft);
 
     globalUpdateTimeLeft = updateTimeLeft;

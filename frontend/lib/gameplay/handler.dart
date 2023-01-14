@@ -81,6 +81,7 @@ class Handler {
       'roomId': roomId,
       'isSpectator': isSpectator
     };
+
     socket.emit('setSpectator', packet);
   }
 
@@ -91,22 +92,30 @@ class Handler {
     });
   }
 
-  static void startGameLoop() {
-    socket.on('playerLocations', (data) {
-      packetCache = packetCache
-          .where((p) => ((p["packetNumber"] ?? 0) > data['packetNumber']))
-          .toList();
+  static void startGameLoop(isSpectator) {
+    if (isSpectator) {
+      socket.on('playerLocationsSpectator', (data) {
+        serverTicks = data['serverTicks'];
 
-      serverTicks = data['serverTicks'];
-      // print(data['locations'].toString());
-      // parse json
-
-      var _tmpLocations = json.decode(data['locations']);
-      packetCache.forEach((p) {
-        applyPacket(_tmpLocations, p["input"]);
+        locations = json.decode(data['locations']);
       });
-      locations = _tmpLocations;
-    });
+    } else {
+      socket.on('playerLocations', (data) {
+        packetCache = packetCache
+            .where((p) => ((p["packetNumber"] ?? 0) > data['packetNumber']))
+            .toList();
+
+        serverTicks = data['serverTicks'];
+        // print(data['locations'].toString());
+        // parse json
+
+        var _tmpLocations = json.decode(data['locations']);
+        packetCache.forEach((p) {
+          applyPacket(_tmpLocations, p["input"]);
+        });
+        locations = _tmpLocations;
+      });
+    }
   }
 
   static void pvp(hitPlayer, updatePlayersLeft, updateLives) {
