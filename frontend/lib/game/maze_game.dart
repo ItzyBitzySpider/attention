@@ -17,8 +17,40 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   List<Wall> mazeWalls = [];
   List<Enemy> enemies = [];
 
+  int shrinkExtent = 0;
+
   @override
   Color backgroundColor() => const Color(MAZE_BACKGROUND_COLOR);
+
+  void drawAllWalls() {
+    mazeWalls = [];
+
+    for (int y = 0; y < mazeHelper.positionMax; y++) {
+      for (int x = 0; x < mazeHelper.positionMax; x++) {
+        if (mazeHelper.hasTopWall(x, y)) {
+          Wall wall = TopWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+
+        if (mazeHelper.hasBottomWall(x, y)) {
+          Wall wall = BottomWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+
+        if (mazeHelper.hasLeftWall(x, y)) {
+          Wall wall = LeftWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+
+        if (mazeHelper.hasRightWall(x, y)) {
+          Wall wall = RightWall(mazeHelper, x, y);
+          mazeWalls.add(wall);
+        }
+      }
+    }
+
+    addAll(mazeWalls);
+  }
 
   void drawWalls(int positionX, int positionY) {
     removeAll(mazeWalls);
@@ -77,6 +109,47 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     add(player);
   }
 
+  void shrinkMaze() {
+    List<List<bool>> newVertical = List.from(mazeHelper.vertical);
+    List<List<bool>> newHorizontal = List.from(mazeHelper.horizontal);
+
+    // Delete rows
+    for (int x = shrinkExtent; x < mazeHelper.positionMax - shrinkExtent; x++) {
+      int oppositeShrinkExtent = mazeHelper.positionMax - shrinkExtent - 1;
+
+      bool drawBorder = x != mazeHelper.positionMax - shrinkExtent - 1;
+
+      // Top row
+      newHorizontal[shrinkExtent][x] = false;
+      newHorizontal[shrinkExtent + 1][x] = drawBorder;
+      newVertical[shrinkExtent][x] = false;
+      newVertical[shrinkExtent][x + 1] = false;
+
+      // Bottom Row
+      newHorizontal[oppositeShrinkExtent][x] = drawBorder;
+      newHorizontal[oppositeShrinkExtent + 1][x] = false;
+      newVertical[oppositeShrinkExtent][x] = false;
+      newVertical[oppositeShrinkExtent][x + 1] = false;
+
+      // Left Row
+      newHorizontal[x][shrinkExtent] = false;
+      newHorizontal[x + 1][shrinkExtent] = false;
+      newVertical[x][shrinkExtent] = false;
+      newVertical[x][shrinkExtent + 1] = drawBorder;
+
+      // Right Row
+      newHorizontal[x][oppositeShrinkExtent] = false;
+      newHorizontal[x + 1][oppositeShrinkExtent] = false;
+      newVertical[x][oppositeShrinkExtent] = drawBorder;
+      newVertical[x][oppositeShrinkExtent + 1] = false;
+    }
+
+    mazeHelper.vertical = newVertical;
+    mazeHelper.horizontal = newHorizontal;
+
+    shrinkExtent++;
+  }
+
   @override
   Future<void> onLoad() async {
     double screenSize = min(size.x, size.y);
@@ -87,7 +160,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       screenSize: screenSize,
     );
 
-    spawnPlayer(0, 0);
+    spawnPlayer(5, 5);
   }
 
   @override
