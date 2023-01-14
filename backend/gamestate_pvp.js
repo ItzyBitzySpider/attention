@@ -43,7 +43,7 @@ function heartsToCoordinates(hearts) {
 }
 
 const FIRST_SHRINK_MS = 30000;
-const FIRST_DELAY_MS = 1000;
+const FIRST_DELAY_MS = 3000;
 const TIME_SHRINK_MS = 15000;
 export class PVPGameState extends GameState {
   constructor(roomId, mazeSize) {
@@ -98,6 +98,7 @@ export class PVPGameState extends GameState {
       this.NEXT_TIME_SHRINK_MS === FIRST_DELAY_MS &&
       this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
     ) {
+      console.log("Timing first shrink", this.NEXT_TIME_SHRINK_MS);
       global.io
         .to(this.roomId)
         .emit("shrinkMaze", [
@@ -109,6 +110,7 @@ export class PVPGameState extends GameState {
       this.shrinkValue < 7 &&
       this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
     ) {
+      console.log("Real shrink", this.shrinkValue, this.NEXT_TIME_SHRINK_MS);
       this.shrinkValue++;
       global.io
         .to(this.roomId)
@@ -123,7 +125,9 @@ export class PVPGameState extends GameState {
           x > this.maze.vert.length - 1 - this.shrinkValue
         ) {
           this.lives[socketId] = 0;
-          console.log(`${socketId} killed by shrink (x)`);
+          console.log(
+            `${socketId} killed by shrink (x ${x} ${this.shrinkValue} ${this.maze.vert.length})`
+          );
           this.changedLives = true;
         }
         if (
@@ -131,7 +135,9 @@ export class PVPGameState extends GameState {
           y > this.maze.vert.length - 1 - this.shrinkValue
         ) {
           this.lives[socketId] = 0;
-          console.log(`${socketId} killed by shrink (y)`);
+          console.log(
+            `${socketId} killed by shrink (y ${y} ${this.shrinkValue} ${this.maze.vert.length})`
+          );
           this.changedLives = true;
         }
       });
