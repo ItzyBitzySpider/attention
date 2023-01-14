@@ -1,8 +1,10 @@
 import 'package:attention_game/screens/menu.dart';
 import 'package:attention_game/colors.dart';
+import 'package:attention_game/utils/sockets.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  init();
   runApp(const MyApp());
 }
 

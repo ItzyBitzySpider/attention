@@ -1,3 +1,4 @@
+import 'package:attention_game/game/types/join_room_Result.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../utils/sockets.dart';
@@ -39,9 +40,15 @@ class Handler {
     render(locations);
   }
 
-  static void joinRoom() {
-    socket.emitWithAck('joinRoom', roomId, ack: (data) {
-      print(data);
+  static void createRoom(callback) {
+    socket.emitWithAck('createRoom', '', ack: (data) => roomId = data);
+  }
+
+  static void joinRoom(room, callback) {
+    socket.emitWithAck('createRoom', '', ack: (data) {
+      JoinRoomResult _r = parseJoinRoomResult(data);
+      callback(_r);
+      roomId = room;
     });
   }
 
@@ -49,9 +56,8 @@ class Handler {
     socket.emit('startGame', roomId);
   }
 
-  static void initialize(roomId, render) {
-    roomId = roomId;
-    render = render;
+  static void startGameLoop(renderFn) {
+    render = renderFn;
 
     socket.on('playerLocations', (data) {
       print(data);

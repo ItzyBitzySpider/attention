@@ -1,5 +1,7 @@
 import 'package:attention_game/colors.dart';
 import 'package:attention_game/game/types/gamemode.dart';
+import 'package:attention_game/game/types/join_room_Result.dart';
+import 'package:attention_game/gameplay/handler.dart';
 import 'package:attention_game/screens/lobby.dart';
 import 'package:attention_game/widgets.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,14 @@ class _JoinGameButtonState extends State<JoinGameButton> {
   String? roomCode;
 
   void _enterButtonPressed() {
-    // TODO Implement join game enter button
+    print("Trying");
+    Handler.joinRoom(roomCode, (res) {
+      if (res == JoinRoomResult.success) {
+        //TODO implement
+      } else {
+        //TODO implement
+      }
+    });
   }
 
   Widget joinGameButton() {
