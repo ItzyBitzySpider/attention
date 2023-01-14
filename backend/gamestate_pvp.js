@@ -100,37 +100,34 @@ export class PVPGameState extends GameState {
   updatePositions() {
     super.updatePositions();
 
-    if (this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP) {
+    if (
+      this.shrinkValue < 7 &&
+      this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
+    ) {
       this.shrinkValue++;
-      if (this.shrinkValue === 7) {
-        global.io
-          .to(this.roomId)
-          .emit("shrinkMaze", [-1, this.maze.vert.length - this.shrinkValue]);
-      } else {
-        global.io
-          .to(this.roomId)
-          .emit("shrinkMaze", [
-            TIME_SHRINK_MS,
-            this.maze.vert.length - this.shrinkValue,
-          ]);
+      global.io
+        .to(this.roomId)
+        .emit("shrinkMaze", [
+          TIME_SHRINK_MS,
+          this.maze.vert.length - this.shrinkValue,
+        ]);
 
-        Object.entries(this.locations).forEach(([socketId, [x, y]]) => {
-          if (
-            x < this.shrinkValue ||
-            x > this.maze.vert.length - 1 - this.shrinkValue
-          ) {
-            this.lives[socketId] = 0;
-            this.changedLives = true;
-          }
-          if (
-            y < this.shrinkValue ||
-            y > this.maze.vert.length - 1 - this.shrinkValue
-          ) {
-            this.lives[socketId] = 0;
-            this.changedLives = true;
-          }
-        });
-      }
+      Object.entries(this.locations).forEach(([socketId, [x, y]]) => {
+        if (
+          x < this.shrinkValue ||
+          x > this.maze.vert.length - 1 - this.shrinkValue
+        ) {
+          this.lives[socketId] = 0;
+          this.changedLives = true;
+        }
+        if (
+          y < this.shrinkValue ||
+          y > this.maze.vert.length - 1 - this.shrinkValue
+        ) {
+          this.lives[socketId] = 0;
+          this.changedLives = true;
+        }
+      });
       this.incrementTimeShrink();
     }
 
