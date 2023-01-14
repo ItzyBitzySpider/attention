@@ -115,8 +115,8 @@ class PVPGameState extends GameState {
       [0, this.mazeBounds[1][1]],
       [this.mazeBounds[0][1], this.mazeBounds[1][1]],
     ];
-    this.locations = global.rooms[roomId].users.reduce((loc, user, i) => {
-      loc[user] = START_LOCATIONS[i];
+    this.locations = global.rooms[roomId].users.reduce((loc, socketId, i) => {
+      loc[socketId] = START_LOCATIONS[i];
       return loc;
     }, {});
   }
