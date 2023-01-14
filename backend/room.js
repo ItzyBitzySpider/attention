@@ -1,5 +1,3 @@
-import { createGame } from "./game.js";
-
 function generateRoomId() {
   return Math.random().toString(36).substring(2, 8).toLowerCase();
 }
@@ -10,7 +8,6 @@ export function startRoomListeners(socket) {
     global.rooms[roomId] = { users: new Set([socket.id]), gameMode };
     socket.join(roomId);
     callback(roomId);
-    createGame(roomId);
   });
 
   socket.on("joinRoom", (roomId, callback) => {
