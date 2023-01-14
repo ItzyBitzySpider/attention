@@ -17,10 +17,8 @@ export function startRoomListeners(socket) {
 
   socket.on("joinRoom", (roomId, callback) => {
     console.log(socket.id, "join:", roomId);
-    if (!global.rooms[roomId]) {
-      callback();
-      return;
-    }
+    if (!global.rooms[roomId]) return;
+
     global.rooms[roomId].players.add(socket.id);
     socket.join(roomId);
     io.to(roomId).emit("updateUsers", global.rooms[roomId].players.size);
