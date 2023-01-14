@@ -2,13 +2,13 @@ import Loop from "accurate-game-loop";
 import { Maze } from "./maze.js";
 
 //TODO increase this lol
-export const LOOP_FPS = 5;
+const LOOP_FPS = 5;
 const MAX_LATENCY_MS = 200;
 
 const ACTION_COOLDOWN_MS = 1000;
 
 //Derived Values
-const MS_PER_LOOP = 1000 / LOOP_FPS;
+export const MS_PER_LOOP = 1000 / LOOP_FPS;
 const MAX_STATE_CACHE_SIZE = Math.ceil(MAX_LATENCY_MS / MS_PER_LOOP);
 export const COOLDOWN_LOOPS = Math.ceil(ACTION_COOLDOWN_MS / MS_PER_LOOP);
 
