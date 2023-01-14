@@ -1,5 +1,5 @@
 import 'package:attention_game/colors.dart';
-import 'package:attention_game/game/common.dart';
+import 'package:attention_game/game/types/gamemode.dart';
 import 'package:attention_game/screens/lobby.dart';
 import 'package:attention_game/widgets.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class _JoinGameButtonState extends State<JoinGameButton> {
         decoration: InputDecoration(
           focusedBorder: textfieldBorder,
           enabledBorder: textfieldBorder,
-          hintText: 'Room code',
+          hintText: 'Room Code',
         ),
       ),
     );
