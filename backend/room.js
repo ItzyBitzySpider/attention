@@ -44,8 +44,8 @@ export function startRoomListeners(socket) {
 export function handleDisconnect(socket) {
   socket.rooms.forEach((roomId) => {
     if (roomId === socket.id) return;
-    global.rooms[roomId].players.delete(socket.id);
-    global.rooms[roomId].spectators.delete(socket.id);
+    global.rooms[roomId]?.players?.delete(socket.id);
+    global.rooms[roomId]?.spectators?.delete(socket.id);
     io.to(roomId).emit("updateUsers", global.rooms[roomId].players.size);
   });
 }
