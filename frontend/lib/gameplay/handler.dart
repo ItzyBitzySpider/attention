@@ -15,7 +15,7 @@ class Handler {
   static int serverTicks = 0;
 
   static Map locations = {};
-  static List<List> hearts = [];
+  static List<dynamic> hearts = [];
   static int playersLeft = 0;
   static Map lives = {};
 
@@ -112,7 +112,7 @@ class Handler {
   static void pvp(shrinkMaze, hitPlayer, updatePlayersLeft, updateLives) {
     socket.on('hearts', (data) {
       print(data);
-      // hearts = data;
+      hearts = data;
     });
 
     socket.on('updateLives', (data) {
