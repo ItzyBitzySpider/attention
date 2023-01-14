@@ -101,10 +101,11 @@ class Handler {
       // print(data['locations'].toString());
       // parse json
 
-      locations = json.decode(data['locations']);
+      var _tmpLocations = json.decode(data['locations']);
       packetCache.forEach((p) {
-        applyPacket(locations, p["input"]);
+        applyPacket(_tmpLocations, p["input"]);
       });
+      locations = _tmpLocations;
     });
   }
 

@@ -3,7 +3,7 @@ import { Maze } from "./maze.js";
 
 //TODO increase this lol
 const LOOP_FPS = 5;
-const MAX_LATENCY_MS = 200;
+const MAX_LATENCY_MS = 1000;
 
 const ACTION_COOLDOWN_MS = 1000;
 
@@ -26,7 +26,7 @@ export class GameState {
 
     this.maze = new Maze(
       [mazeSize, mazeSize - 2, mazeSize - 4, mazeSize - 6, mazeSize - 8],
-      0.3
+      0.15
     );
   }
 
@@ -61,14 +61,14 @@ export class GameState {
     const [x, y] = this.locations[socketId];
     if ((1 << 0) & newInput) {
       if (!this.maze.vert[y][x] && x > this.shrinkValue)
-        this.locations[socketId][0] -= 1;
+        this.locations[socketId][0]--;
     }
     if ((1 << 1) & newInput) {
       if (
         !this.maze.vert[y][x + 1] &&
         x < this.maze.vert.length - 2 - this.shrinkValue
       )
-        this.locations[socketId][0] += 1;
+        this.locations[socketId][0]++;
     }
     if ((1 << 2) & newInput) {
       if (!this.maze.horiz[y][x] && y > this.shrinkValue)
@@ -82,6 +82,11 @@ export class GameState {
         this.locations[socketId][1]++;
     }
     this.packetNumbers[socketId] = packetNum;
+  }
+
+  endGame() {
+    this.loop.stop();
+    global.io.to(this.roomId).emit("gameEnd");
   }
 
   removePlayer(socketId) {
