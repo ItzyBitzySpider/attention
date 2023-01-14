@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:attention_game/game/types/gamemode.dart';
 import 'package:attention_game/game/types/player_type.dart';
 
+import '../gameplay/handler.dart';
+
 // ignore: constant_identifier_names
 const double DETAIL_TEXT_HEADER_SIZE = 40;
 // ignore: constant_identifier_names
@@ -21,8 +23,21 @@ class Lobby extends StatefulWidget {
 
 class _LobbyState extends State<Lobby> {
   PlayerType playerType = PlayerType.player;
-  String roomcode = '123 123';
+  late String roomcode = '';
   int playerCount = 6;
+
+  @override
+  void initState() {
+    Handler.createRoom(gamemodeToString(widget.gamemode), populateroomcode);
+    super.initState();
+  }
+
+  void populateroomcode(){
+    setState(() {
+      roomcode = Handler.roomId;
+    });
+      // print(Handler.room);
+  }
 
   @override
   Widget build(BuildContext context) {

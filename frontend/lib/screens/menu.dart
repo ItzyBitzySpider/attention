@@ -20,10 +20,15 @@ class _JoinGameButtonState extends State<JoinGameButton> {
   void _enterButtonPressed() {
     print("Trying");
     Handler.joinRoom(roomCode, (res) {
-      if (res == JoinRoomResult.success) {
-        //TODO implement
+      if (res == 'Success') {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Lobby(gamemode: GameMode.none),
+            ));
       } else {
-        //TODO implement
+        print("Failed");
+        // TODO error handling
       }
     });
   }
