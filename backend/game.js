@@ -205,8 +205,8 @@ export function startGameListeners(socket) {
       if (roomId === socket.id) continue;
 
       if (global.rooms[roomId].gameMode === "PVP")
-        global.gameStates[roomId] = new PVPGameState(roomId, 20);
-      else global.gameStates[roomId] = new EscapeGameState(roomId, 20);
+        global.gameStates[roomId] = new PVPGameState(roomId, 21);
+      else global.gameStates[roomId] = new EscapeGameState(roomId, 21);
 
       global.gameStates[roomId].startGame();
       const maze = global.gameStates[roomId].maze;
