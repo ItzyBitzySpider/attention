@@ -26,6 +26,7 @@ jobs:
             git pull
             # Backend CD
             killall node || true # Force return true so exit code is not 1
+            npm install -g yarn
             yarn install
             yarn prod
             
