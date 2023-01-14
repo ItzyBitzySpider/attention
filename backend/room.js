@@ -5,12 +5,14 @@ function generateRoomId() {
 export function startRoomListeners(socket) {
   socket.on("createRoom", (gameMode, callback) => {
     const roomId = generateRoomId();
+    console.log(socket.id, "create:", roomId);
     global.rooms[roomId] = { users: new Set([socket.id]), gameMode };
     socket.join(roomId);
     callback(roomId);
   });
 
   socket.on("joinRoom", (roomId, callback) => {
+    console.log(socket.id, "join:", roomId);
     if (!global.rooms[roomId]) {
       callback("Room does not exist");
     } else {
