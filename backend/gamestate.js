@@ -95,7 +95,6 @@ export class GameState {
   endGame() {
     this.loop.stop();
     global.io.to(this.roomId).emit("gameEnd");
-    delete global.rooms[this.roomId];
     delete global.gameStates[this.roomId];
   }
 
