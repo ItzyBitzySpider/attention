@@ -20,7 +20,7 @@ global.io.on("connection", (socket) => {
   console.log(`${socket.id} connected`);
 
   startRoomListeners(socket);
-  startGameListeners(io, socket);
+  startGameListeners(socket);
 
   socket.on("ping", (data, ack) => {
     const startTime = Date.now();
