@@ -91,10 +91,10 @@ class _GameplayState extends State<Gameplay> {
   }
 
   Widget rightArea() {
-    String formatDuration(int totalSeconds) {
-      final duration = Duration(milliseconds: totalSeconds);
+    String formatDuration(int s) {
+      final duration = Duration(microseconds: s);
       final minutes = duration.inMinutes;
-      final seconds = totalSeconds % 60;
+      final seconds = duration.inSeconds;
 
       final minutesString = '$minutes'.padLeft(2, '0');
       final secondsString = '$seconds'.padLeft(2, '0');

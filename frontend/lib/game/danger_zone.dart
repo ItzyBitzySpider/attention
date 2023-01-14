@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:attention_game/colors.dart';
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:flame/components.dart';
 
