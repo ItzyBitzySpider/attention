@@ -163,7 +163,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       screenSize: screenSize,
     );
 
-    spawnPlayer(5, 5);
+    spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
   }
 
   @override
@@ -172,8 +172,8 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     drawWalls(player.positionX, player.positionY);
     // iterate map
     Handler.locations.forEach((key, value) {
-      if(getSocket().id != key) drawEnemy(value[0], value[1]);
-    });    
+      if (getSocket().id != key) drawEnemy(value[0], value[1]);
+    });
     drawEnemy(10, 10);
   }
 }
