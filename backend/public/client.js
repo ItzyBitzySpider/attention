@@ -58,8 +58,9 @@ class Network {
     };
     this.packetCache.push(packet);
 
-    setTimeout(() => this.socket.emit("playerInput", packet), 500);
-    // this.socket.emit("playerInput", packet);
+    // !The following line artificially adds lag
+    // setTimeout(() => this.socket.emit("playerInput", packet), 500);
+    this.socket.emit("playerInput", packet);
 
     this.packetsSent++;
 
