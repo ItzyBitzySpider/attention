@@ -76,34 +76,41 @@ export class PVPGameState extends GameState {
     const START_LOCATIONS = [
       [0, 0],
       [this.maze.vert.length - 1, 0],
-      [0, this.mazeBounds[1][1]],
-      [this.mazeBounds[0][1], this.mazeBounds[1][1]],
+      [0, this.maze.vert.length - 1],
+      [this.maze.vert.length - 1, this.maze.vert.length - 1],
     ];
     global.io.to(this.roomId).emit("hearts", heartsToCoordinates(this.hearts));
 
-    this.locations = global.rooms[roomId].players.reduce((loc, socketId, i) => {
-      loc[socketId] = START_LOCATIONS[i];
-      return loc;
-    }, {});
+    this.locations = global.rooms[this.roomId].players.reduce(
+      (loc, socketId, i) => {
+        loc[socketId] = START_LOCATIONS[i];
+        return loc;
+      },
+      {}
+    );
   }
 
   updatePositions() {
     super.updatePositions();
 
     if (this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP) {
-      global.io.to(this.roomId).emit("shrinkMaze", this.mazeBounds[0][1]);
-
-      this.mazeBounds = this.mazeBounds.reduce((curr, v) => {
-        curr.push([v[0] + 1, v[1] - 1]);
-        return curr;
-      }, []);
+      this.shrinkValue--;
+      global.io
+        .to(this.roomId)
+        .emit("shrinkMaze", this.maze.vert.length - 1 - this.shrinkValue);
 
       this.locations.forEach((socketId, [x, y]) => {
-        if (x < this.mazeBounds[0][0] || x > this.mazeBounds[0][1]) {
+        if (
+          x < this.shrinkValue ||
+          x > this.maze.vert.length - 1 - this.shrinkValue
+        ) {
           this.lives[socketId] = 0;
           this.changedLives = true;
         }
-        if (y < this.mazeBounds[1][0] || y > this.mazeBounds[1][1]) {
+        if (
+          y < this.shrinkValue ||
+          y > this.maze.vert.length - 1 - this.shrinkValue
+        ) {
           this.lives[socketId] = 0;
           this.changedLives = true;
         }

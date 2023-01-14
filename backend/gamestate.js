@@ -22,14 +22,12 @@ export class GameState {
     this.serverTicks = 0;
     this.loop = new Loop(() => this.updatePositions(), LOOP_FPS);
 
+    this.shrinkValue = 0;
+
     this.maze = new Maze(
       [mazeSize, mazeSize - 2, mazeSize - 4, mazeSize - 6, mazeSize - 8],
       0.3
     );
-    this.mazeBounds = [
-      [0, mazeSize - 1],
-      [0, mazeSize - 1],
-    ]; //Inclusive
   }
 
   startGame() {
@@ -61,19 +59,25 @@ export class GameState {
   processInput(socketId, serverTicks, newInput, packetNum) {
     const [x, y] = this.locations[socketId];
     if ((1 << 0) & newInput) {
-      if (!this.maze.horiz[y][x] && x > this.mazeBounds[0][0])
+      if (!this.maze.horiz[y][x] && x > this.shrinkValue)
         this.locations[socketId][0]--;
     }
     if ((1 << 1) & newInput) {
-      if (!this.maze.horiz[y][x + 1] && x < this.mazeBounds[0][1])
+      if (
+        !this.maze.horiz[y][x + 1] &&
+        x < this.maze.vert.length - 1 - this.shrinkValue
+      )
         this.locations[socketId][0]++;
     }
     if ((1 << 2) & newInput) {
-      if (!this.maze.vert[y][x] && y > this.mazeBounds[1][0])
+      if (!this.maze.vert[y][x] && y > this.shrinkValue)
         this.locations[socketId][1]--;
     }
     if ((1 << 3) & newInput) {
-      if (!this.maze.vert[y + 1][x] && y < this.mazeBounds[1][1])
+      if (
+        !this.maze.vert[y + 1][x] &&
+        y < this.maze.vert.length - 1 - this.shrinkValue
+      )
         this.locations[socketId][1]++;
     }
 
