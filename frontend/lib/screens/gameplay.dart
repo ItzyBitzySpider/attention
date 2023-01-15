@@ -22,7 +22,7 @@ class Gameplay extends StatefulWidget {
 class _GameplayState extends State<Gameplay> {
   int playerLeft = 0;
   bool isDead = false;
-  int playersLeft = 5;
+  int playersLeft = 4;
   int mazeShrinkTimeSeconds = 191;
   int lives = 3;
   bool win = false;
@@ -35,6 +35,8 @@ class _GameplayState extends State<Gameplay> {
   }
 
   void updatePlayersLeft(players) {
+    print('players');
+    print(players);
     setState(() {
       playersLeft = players;
     });
