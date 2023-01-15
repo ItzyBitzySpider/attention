@@ -64,6 +64,7 @@ export class GameState {
       // console.log(socketId, packetNum, tmpState);
       global.io.to(socketId).emit("playerLocations", tmpState);
     }
+    currentState.locations = JSON.stringify(currentState.locations);
     global.io.to(this.roomId).emit("playerLocationsSpectator", currentState);
     this.stateCache.push(currentState);
     if (this.stateCache.length > MAX_STATE_CACHE_SIZE) this.stateCache.shift();
