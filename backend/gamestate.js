@@ -77,6 +77,7 @@ export class GameState {
   }
 
   processInput(socketId, serverTicks, newInput, packetNum) {
+    if (!this.locations[socketId]) return;
     const [x, y] = this.locations[socketId];
     if ((1 << 0) & newInput) {
       if (!this.maze.vert[y][x] && x > this.shrinkValue)
