@@ -27,7 +27,7 @@ class Gameplay extends StatefulWidget {
 class _GameplayState extends State<Gameplay> {
   int playerLeft = 0;
   bool isDead = false;
-  int playersLeft = 5;
+  int playersLeft = 4;
   int mazeShrinkTimeSeconds = 191;
   int lives = 3;
   bool win = false;
@@ -40,6 +40,8 @@ class _GameplayState extends State<Gameplay> {
   }
 
   void updatePlayersLeft(players) {
+    print('players');
+    print(players);
     setState(() {
       playersLeft = players;
     });
@@ -126,7 +128,9 @@ class _GameplayState extends State<Gameplay> {
   @override
   Widget build(BuildContext context) {
     if (isDead || win) {
-      String gameOverText = isDead ? 'You Died!' : 'You Won!';
+      String gameOverText = isDead
+          ? 'You Died!'
+          : (Handler.isSpectator ? 'Game Over' : 'You Won!');
       return Scaffold(
         body: Center(
           child: Column(
