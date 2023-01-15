@@ -60,6 +60,7 @@ class _LobbyState extends State<Lobby> {
           builder: (context) => Gameplay(
             gamemode: widget.gamemode,
             newGamemode: playerMode,
+            playersLeft: playerCount,
           ),
         ),
       );
@@ -79,6 +80,7 @@ class _LobbyState extends State<Lobby> {
           builder: (context) => Gameplay(
             gamemode: widget.gamemode,
             newGamemode: playerMode,
+            playersLeft: playerCount,
           ),
         ),
       );
