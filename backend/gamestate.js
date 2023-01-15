@@ -66,6 +66,7 @@ export class GameState {
     }
     currentState.locations = JSON.stringify(currentState.locations);
     global.io.to(this.roomId).emit("playerLocationsSpectator", currentState);
+    console.log();
     this.stateCache.push(currentState);
     if (this.stateCache.length > MAX_STATE_CACHE_SIZE) this.stateCache.shift();
   }
