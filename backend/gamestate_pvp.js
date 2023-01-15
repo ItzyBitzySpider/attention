@@ -172,12 +172,14 @@ export class PVPGameState extends GameState {
   processInput(socketId, serverTicks, newInput, packetNum) {
     super.processInput(socketId, serverTicks, newInput, packetNum);
 
-    const [x, y] = this.locations[socketId];
-    if (this.hearts.has(`${x},${y}`)) {
-      this.lives[socketId]++;
-      this.hearts.delete(`${x},${y}`);
-      this.changedLives = true;
-      this.changedHearts = true;
+    if (this.locations[socketId]) {
+      const [x, y] = this.locations[socketId];
+      if (this.hearts.has(`${x},${y}`)) {
+        this.lives[socketId]++;
+        this.hearts.delete(`${x},${y}`);
+        this.changedLives = true;
+        this.changedHearts = true;
+      }
     }
 
     //Space bar action
