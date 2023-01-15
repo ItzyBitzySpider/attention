@@ -82,7 +82,7 @@ class Handler {
       'roomId': roomId,
       'isSpectator': isSpectatorView
     };
-    isSpectator = isSpectatorView
+    isSpectator = isSpectatorView;
     socket.emit('setSpectator', packet);
   }
 
@@ -143,4 +143,13 @@ class Handler {
       // shrinkMaze(data[0]);
     });
   }
+
+  static void listenEarthquake(earthquake) {
+    socket.on('earthquake', (data) {
+      earthquake(data);
+    });
+  }
+
+  
+
 }
