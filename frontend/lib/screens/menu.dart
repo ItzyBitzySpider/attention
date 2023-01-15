@@ -46,19 +46,26 @@ class _JoinGameButtonState extends State<JoinGameButton> {
   Widget roomCodeWidget() {
     InputBorder textfieldBorder = OutlineInputBorder(
       borderSide: const BorderSide(
-        color: Color(JOIN_GAME_BUTTON_COLOR),
-        width: 5.0,
+        color: Color(0xFF808080),
+        width: 3.0,
       ),
       borderRadius: BorderRadius.circular(10.0),
     );
 
     Widget roomCodeTextField = Expanded(
-      child: TextField(
-        onChanged: (text) => roomCode = text,
-        decoration: InputDecoration(
-          focusedBorder: textfieldBorder,
-          enabledBorder: textfieldBorder,
-          hintText: 'Room Code',
+      child: Material(
+        color: const Color(BACKGROUND_COLOR),
+        borderRadius: BorderRadius.circular(10.0),
+        elevation: 5.0,
+        child: TextField(
+          cursorColor: const Color(0xff808080),
+          style: const TextStyle(height: 1.5, fontSize: 18),
+          onChanged: (text) => roomCode = text,
+          decoration: InputDecoration(
+            focusedBorder: textfieldBorder,
+            enabledBorder: textfieldBorder,
+            hintText: 'Room Code',
+          ),
         ),
       ),
     );
@@ -68,7 +75,7 @@ class _JoinGameButtonState extends State<JoinGameButton> {
       child: ElevatedButton(
         onPressed: _enterButtonPressed,
         style: ElevatedButton.styleFrom(
-          elevation: 0.0,
+          elevation: 5.0,
           backgroundColor: const Color(JOIN_GAME_BUTTON_COLOR),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
@@ -85,7 +92,7 @@ class _JoinGameButtonState extends State<JoinGameButton> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           roomCodeTextField,
-          const SizedBox(width: 10),
+          const SizedBox(width: 7),
           enterButton,
         ],
       ),
