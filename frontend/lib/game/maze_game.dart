@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:attention_game/colors.dart';
 import 'package:attention_game/game/danger_zone.dart';
-import 'package:attention_game/game/earthquake.dart';
 import 'package:attention_game/game/enemy.dart';
 import 'package:attention_game/game/pickup.dart';
 import 'package:attention_game/game/maze_helper.dart';
@@ -17,6 +16,9 @@ import '../gameplay/handler.dart';
 import '../utils/sockets.dart';
 
 class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
+  String hi;
+  MazeGame(this.hi);
+
   late MazeHelper mazeHelper;
 
   int frameCounter = 0;
@@ -229,7 +231,6 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   void drawHearts() {
     removeAll(pickups);
     pickups = [];
-    // print(Handler.hearts);
     for (var p in Handler.hearts) {
       int x = p[0];
       int y = p[1];

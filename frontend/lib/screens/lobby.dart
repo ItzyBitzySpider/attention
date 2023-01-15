@@ -3,7 +3,6 @@ import 'package:attention_game/screens/gameplay.dart';
 import 'package:attention_game/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:attention_game/game/types/gamemode.dart';
-import 'package:attention_game/game/types/player_type.dart';
 
 import '../gameplay/handler.dart';
 
@@ -28,9 +27,10 @@ class Lobby extends StatefulWidget {
 }
 
 class _LobbyState extends State<Lobby> {
-  PlayerType playerType = PlayerType.player;
   String roomcode = '';
   int playerCount = 1;
+
+  late GameMode playerMode;
 
   @override
   void initState() {
@@ -57,10 +57,12 @@ class _LobbyState extends State<Lobby> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Gameplay(gamemode: widget.gamemode),
+          builder: (context) => Gameplay(gamemode: playerMode),
         ),
       );
     });
+
+    playerMode = widget.gamemode;
     super.initState();
   }
 
@@ -78,12 +80,12 @@ class _LobbyState extends State<Lobby> {
 
     void switchPlayerType() {
       setState(() {
-        if (playerType == PlayerType.player) {
-          playerType = PlayerType.spectator;
+        if (playerMode == GameMode.spectator) {
+          playerMode = widget.gamemode;
         } else {
-          playerType = PlayerType.player;
+          playerMode = GameMode.spectator;
         }
-        Handler.setSpectator(playerType == PlayerType.spectator);
+        Handler.setSpectator(playerMode == GameMode.spectator);
       });
     }
 
@@ -126,7 +128,7 @@ class _LobbyState extends State<Lobby> {
       return SizedBox(
         child: Column(
           children: [
-            playerType == PlayerType.player
+            playerMode != GameMode.spectator
                 ? MenuButton(
                     buttonText: 'Start Game',
                     backgroundColor: const Color(START_GAME_BUTTON_COLOR),
@@ -136,7 +138,7 @@ class _LobbyState extends State<Lobby> {
             const SizedBox(height: 20.0),
             MenuButton(
               buttonText:
-                  playerType == PlayerType.player ? 'Spectate' : 'Join Game',
+                  playerMode != GameMode.spectator ? 'Spectate' : 'Join Game',
               backgroundColor: const Color(SPECTATE_BUTTON_COLOR),
               onPressed: switchPlayerType,
             ),
@@ -151,7 +153,7 @@ class _LobbyState extends State<Lobby> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Join as ${playerType == PlayerType.player ? 'Player' : 'Spectator'}',
+              'Join as ${playerMode != GameMode.spectator ? 'Player' : 'Spectator'}',
               style: const TextStyle(fontSize: DETAIL_TEXT_HEADER_SIZE),
             ),
             const SizedBox(height: 80),
