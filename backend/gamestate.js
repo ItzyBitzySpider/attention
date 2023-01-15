@@ -104,6 +104,7 @@ export class GameState {
     this.packetNumbers[socketId] = packetNum;
   }
 
+  //! Bug need to leave room
   endGame() {
     this.loop.stop();
     global.io.to(this.roomId).emit("gameEnd");
