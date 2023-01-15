@@ -259,6 +259,12 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
 
     spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
     Handler.shrink(startShrinkCountdown);
+    // Handler.listenEarthquake(earthquake);
+    // earthquake is a draw enemy earthquake function that takes in 1 parameter
+    // earthquake(socketId){
+    //  var location = Handler.locations[socketId];
+    //  drawsomething(location[0], location[1]);
+    // }
   }
 
   @override

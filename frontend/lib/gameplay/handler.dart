@@ -119,7 +119,7 @@ class Handler {
     }
   }
 
-  static void pvp(hitPlayer, updatePlayersLeft, updateLives) {
+  static void pvp(hitPlayer, updatePlayersLeft, updateLives, gameEnd) {
     socket.on('hearts', (data) {
       print(data);
       hearts = data;
@@ -134,6 +134,10 @@ class Handler {
       updatePlayersLeft(data['playersLeft']);
     });
 
+    socket.on('gameEnd', (data) {
+      gameEnd();
+    });
+
     // socket.on('hit', hitPlayer);
   }
 
@@ -143,4 +147,13 @@ class Handler {
       // shrinkMaze(data[0]);
     });
   }
+
+  static void listenEarthquake(earthquake) {
+    socket.on('earthquake', (data) {
+      earthquake(data);
+    });
+  }
+
+  
+
 }
