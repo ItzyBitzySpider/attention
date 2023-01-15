@@ -271,12 +271,12 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       int x = p[0];
       int y = p[1];
 
-      if (isSpectator ||
-          ((x - player.positionX).abs() < 2 &&
-              (y - player.positionY).abs() < 2)) {
-        pickups.add(
-            HeartPickup(mazeHelper: mazeHelper, positionX: x, positionY: y));
-      }
+      // if (isSpectator ||
+      //     ((x - player.positionX).abs() < 2 &&
+      //         (y - player.positionY).abs() < 2)) {
+      pickups
+          .add(HeartPickup(mazeHelper: mazeHelper, positionX: x, positionY: y));
+      // }
     }
 
     addAll(pickups);

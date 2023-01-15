@@ -134,7 +134,7 @@ class _GameplayState extends State<Gameplay> {
             children: [
               Text(
                 gameOverText,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
