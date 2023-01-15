@@ -147,11 +147,10 @@ export class PVPGameState extends GameState {
         playersLeft,
       });
 
-      let dead = false;
       Object.entries(this.lives).forEach(([socketId, life]) => {
         if (life <= 0 && currentState.locations[socketId]) {
           delete currentState.locations[socketId];
-          dead = true;
+          console.log("Deleting dead player", socketId, this.locations);
         }
       });
 
