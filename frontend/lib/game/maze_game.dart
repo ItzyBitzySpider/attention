@@ -109,8 +109,8 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   }
 
   void shrinkMaze() {
-    List<List<bool>> newVertical = List.from(mazeHelper.vertical);
-    List<List<bool>> newHorizontal = List.from(mazeHelper.horizontal);
+    List<List<dynamic>> newVertical = List.from(mazeHelper.vertical);
+    List<List<dynamic>> newHorizontal = List.from(mazeHelper.horizontal);
 
     // Delete rows
     for (int x = shrinkExtent; x < mazeHelper.positionMax - shrinkExtent; x++) {
