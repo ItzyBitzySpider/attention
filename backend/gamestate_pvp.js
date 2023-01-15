@@ -92,7 +92,7 @@ export class PVPGameState extends GameState {
   }
 
   updatePositions() {
-    super.updatePositions();
+    const currentState = this.preUpdatePosition();
 
     if (this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP) {
       if (this.NEXT_TIME_SHRINK_MS === FIRST_DELAY_MS) {
@@ -114,7 +114,7 @@ export class PVPGameState extends GameState {
             this.maze.vert.length - this.shrinkValue,
           ]);
 
-        Object.entries(this.locations).forEach(([socketId, [x, y]]) => {
+        Object.entries(currentState.locations).forEach(([socketId, [x, y]]) => {
           if (
             x < this.shrinkValue ||
             x > this.maze.vert.length - 1 - this.shrinkValue
@@ -147,15 +147,20 @@ export class PVPGameState extends GameState {
         playersLeft,
       });
 
-      Object.entries(this.lives).filter(([socketId, live]) => {
-        if (live <= 0 && this.locations[socketId])
-          delete this.locations[socketId];
+      let dead = false;
+      Object.entries(this.lives).forEach(([socketId, life]) => {
+        if (life <= 0 && currentState.locations[socketId]) {
+          delete currentState.locations[socketId];
+          dead = true;
+        }
       });
 
       if (playersLeft <= 1) this.endGame();
 
       this.changedLives = false;
     }
+
+    this.postUpdatePosition(currentState);
 
     if (this.changedHearts) {
       global.io
