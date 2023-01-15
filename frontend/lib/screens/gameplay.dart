@@ -30,6 +30,7 @@ class _GameplayState extends State<Gameplay> {
   int playersLeft = 5;
   int mazeShrinkTimeSeconds = 191;
   int lives = 3;
+  bool win = false;
 
   void updateLivesLeft(livesLeft) {
     setState(() {
@@ -50,10 +51,16 @@ class _GameplayState extends State<Gameplay> {
     });
   }
 
+  void gameEnd() {
+    setState(() {
+      win = true;
+    });
+  }
+
   @override
   void initState() {
     Handler.startGameLoop(widget.newGamemode == GameMode.spectator);
-    Handler.pvp(() {}, updatePlayersLeft, updateLivesLeft);
+    Handler.pvp(() {}, updatePlayersLeft, updateLivesLeft, gameEnd);
 
     globalUpdateTimeLeft = updateTimeLeft;
     super.initState();
@@ -118,14 +125,15 @@ class _GameplayState extends State<Gameplay> {
 
   @override
   Widget build(BuildContext context) {
-    if (isDead) {
+    if (isDead || win) {
+      String gameOverText = isDead ? 'You Died!' : 'You Won!';
       return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'You Died!',
+              Text(
+                gameOverText,
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
