@@ -34,7 +34,7 @@ class _GameplayState extends State<Gameplay> {
 
   void updateLivesLeft(livesLeft) {
     setState(() {
-      isDead = livesLeft == 0;
+      isDead = livesLeft <= 0;
       lives = livesLeft;
     });
   }
