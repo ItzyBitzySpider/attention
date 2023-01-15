@@ -17,6 +17,10 @@ Socket _socket = io(
 // init socket
 Socket init() {
   // connect to socket server
+  try {
+    _socket.disconnect();
+  } catch (e) {}
+
   return _socket.connect();
 }
 
