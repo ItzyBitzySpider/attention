@@ -128,7 +128,9 @@ class _GameplayState extends State<Gameplay> {
   @override
   Widget build(BuildContext context) {
     if (isDead || win) {
-      String gameOverText = isDead ? 'You Died!' : 'You Won!';
+      String gameOverText = isDead
+          ? 'You Died!'
+          : (Handler.isSpectator ? 'Game Over' : 'You Won!');
       return Scaffold(
         body: Center(
           child: Column(
