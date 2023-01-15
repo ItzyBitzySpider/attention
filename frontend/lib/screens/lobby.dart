@@ -98,16 +98,16 @@ class _LobbyState extends State<Lobby> {
     Widget lobbyDetails() {
       Widget detailText(String label, String value) {
         return SizedBox(
-          width: 300,
+          width: 400,
           child: Column(
             children: [
-              Text(
+              Padding(padding: const EdgeInsets.all(15), child: Text(
                 label,
                 style: const TextStyle(
                   fontSize: DETAIL_TEXT_HEADER_SIZE,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
-              ),
+              )),
               SelectableText(
                 value,
                 style: const TextStyle(
@@ -125,7 +125,7 @@ class _LobbyState extends State<Lobby> {
         children: [
           detailText('Game Mode', gamemodeToString(widget.gamemode)),
           detailText('Room Code', roomcode),
-          detailText('Players', playerCount.toString()),
+          detailText('Players', playerCount.toString())
         ],
       );
     }
@@ -160,12 +160,13 @@ class _LobbyState extends State<Lobby> {
           children: [
             Text(
               'Join as ${playerMode != GameMode.spectator ? 'Player' : 'Spectator'}',
-              style: const TextStyle(fontSize: DETAIL_TEXT_HEADER_SIZE),
+              style: const TextStyle(fontSize: DETAIL_TEXT_HEADER_SIZE, fontWeight: FontWeight.w100),
             ),
-            const SizedBox(height: 80),
+            const SizedBox(height: 170),
             lobbyDetails(),
-            const SizedBox(height: 80),
+            const SizedBox(height: 150),
             lobbyButtons(),
+            const SizedBox(height: 120),
           ],
         ),
       ),

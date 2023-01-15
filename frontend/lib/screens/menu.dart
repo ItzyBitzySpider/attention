@@ -170,6 +170,7 @@ class _MenuState extends State<Menu> {
                   newGameButton(),
                   const SizedBox(height: 20.0),
                   const JoinGameButton(),
+                  const SizedBox(height: 100.0),
                 ],
         ),
       ),
