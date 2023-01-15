@@ -1,5 +1,5 @@
 function generateRoomId() {
-  return Math.random().toString(36).substring(2, 8).toLowerCase();
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
 export function startRoomListeners(socket) {
