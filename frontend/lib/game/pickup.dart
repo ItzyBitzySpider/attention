@@ -45,6 +45,6 @@ class HeartPickup extends Pickup {
           mazeHelper: mazeHelper,
           positionX: positionX,
           positionY: positionY,
-          spritePath: 'ppt_heart.png',
+          spritePath: 'heart.png',
         );
 }

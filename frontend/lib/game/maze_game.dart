@@ -16,10 +16,8 @@ import '../gameplay/handler.dart';
 import '../utils/sockets.dart';
 
 class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
-  String hi;
-  MazeGame(this.hi);
-
   late MazeHelper mazeHelper;
+  late bool isSpectator;
 
   int frameCounter = 0;
 
@@ -37,6 +35,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   Color backgroundColor() => const Color(MAZE_BACKGROUND_COLOR);
 
   void drawAllWalls() {
+    removeAll(mazeWalls);
     mazeWalls = [];
 
     for (int y = 0; y < mazeHelper.positionMax; y++) {
@@ -165,8 +164,9 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
         int positionX = value[0];
         int positionY = value[1];
 
-        if ((positionX - player.positionX).abs() < 2 &&
-            (positionY - player.positionY).abs() < 2) {
+        if (isSpectator ||
+            ((positionX - player.positionX).abs() < 2 &&
+                (positionY - player.positionY).abs() < 2)) {
           enemies.add(Enemy(
               mazeHelper: mazeHelper,
               positionX: positionX,
@@ -208,6 +208,42 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     addAll(dangerZones);
   }
 
+  void drawAllDangerZones() {
+    int opposite = mazeHelper.positionMax - shrinkExtent - 1;
+    for (int i = shrinkExtent; i < opposite + 1; i++) {
+      dangerZones.add(DangerZone(
+        mazeHelper: mazeHelper,
+        positionX: i,
+        positionY: shrinkExtent,
+        colorCode:
+            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+      ));
+      dangerZones.add(DangerZone(
+        mazeHelper: mazeHelper,
+        positionX: i,
+        positionY: opposite,
+        colorCode:
+            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+      ));
+      dangerZones.add(DangerZone(
+        mazeHelper: mazeHelper,
+        positionX: shrinkExtent,
+        positionY: i,
+        colorCode:
+            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+      ));
+      dangerZones.add(DangerZone(
+        mazeHelper: mazeHelper,
+        positionX: opposite,
+        positionY: i,
+        colorCode:
+            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+      ));
+    }
+
+    addAll(dangerZones);
+  }
+
   // void drawKeys() {
   //   removeAll(pickups);
   //   pickups = [];
@@ -235,8 +271,9 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       int x = p[0];
       int y = p[1];
 
-      if ((x - player.positionX).abs() < 2 &&
-          (y - player.positionY).abs() < 2) {
+      if (isSpectator ||
+          ((x - player.positionX).abs() < 2 &&
+              (y - player.positionY).abs() < 2)) {
         pickups.add(
             HeartPickup(mazeHelper: mazeHelper, positionX: x, positionY: y));
       }
@@ -248,8 +285,10 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   @override
   Future<void> onLoad() async {
     await Future.delayed(const Duration(seconds: 1));
+
+    isSpectator = Handler.isSpectator;
+
     double screenSize = min(size.x, size.y);
-    print(Handler.hearts);
     //cast to bool;
     mazeHelper = MazeHelper(
       vertical: Handler.maze[1],
@@ -257,8 +296,13 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       screenSize: screenSize,
     );
 
-    spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
     Handler.shrink(startShrinkCountdown);
+
+    if (isSpectator) {
+      drawAllWalls();
+    } else {
+      spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
+    }
     // Handler.listenEarthquake(earthquake);
     // earthquake is a draw enemy earthquake function that takes in 1 parameter
     // earthquake(socketId){
@@ -267,11 +311,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     // }
   }
 
-  @override
-  void update(double dt) {
-    super.update(dt);
-    frameCounter++;
-
+  void playerUpdate(double dt) {
     if (player.earthquakeOnCooldown) {
       player.cooldownTimer -= (dt * 1000000).toInt();
 
@@ -282,6 +322,14 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       }
     }
 
+    drawWalls(player.positionX, player.positionY);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    frameCounter++;
+
     removeAll(dangerZones);
     dangerZones = [];
     if (isShrinking) {
@@ -291,16 +339,24 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
         isShrinking = false;
         timeToShrink = 0;
         shrinkMaze();
+        if (isSpectator) {
+          drawAllWalls();
+        }
       } else {
-        drawDangerZones();
+        if (isSpectator) {
+          drawAllDangerZones();
+        } else {
+          drawDangerZones();
+        }
       }
       globalUpdateTimeLeft(timeToShrink);
     }
 
-    drawWalls(player.positionX, player.positionY);
-    // iterate map
+    if (!isSpectator) {
+      playerUpdate(dt);
+    }
 
-    drawEnemies();
     drawHearts();
+    drawEnemies();
   }
 }

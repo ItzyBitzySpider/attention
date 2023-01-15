@@ -8,7 +8,7 @@ class MazeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameWidget<MazeGame>(
-      game: MazeGame('asdasd'),
+      game: MazeGame(),
       loadingBuilder: (context) => Center(
         child: Text(
           'Loading...',
