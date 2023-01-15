@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:attention_game/colors.dart';
 import 'package:attention_game/game/danger_zone.dart';
+import 'package:attention_game/game/earthquake.dart';
 import 'package:attention_game/game/enemy.dart';
 import 'package:attention_game/game/pickup.dart';
 import 'package:attention_game/game/maze_helper.dart';
 import 'package:attention_game/game/player.dart';
 import 'package:attention_game/game/wall.dart';
 import 'package:attention_game/screens/gameplay.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
 
   late Player player;
   List<Wall> mazeWalls = [];
-  Map<String, Enemy> socketIdToEnemy = {};
+  List<Enemy> enemies = [];
   List<Pickup> pickups = [];
   List<DangerZone> dangerZones = [];
 
@@ -155,9 +157,21 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     timeToShrink = milliseconds * 1000;
   }
 
+  void showEarthquake() {
+    Earthquake earthquake = Earthquake(mazeHelper: mazeHelper);
+    earthquake.add(ScaleEffect.to(
+      Vector2.zero(),
+      EffectController(duration: EARTHQUAKE_ANIMATION_DURATION),
+    ));
+    earthquake.add(
+      RemoveEffect(delay: EARTHQUAKE_COOLDOWN_MILLISECONDS.toDouble()),
+    );
+    add(earthquake);
+  }
+
   void drawEnemies() {
-    removeAll(socketIdToEnemy.values.toList());
-    socketIdToEnemy = {};
+    removeAll(enemies);
+    enemies = [];
 
     Handler.locations.forEach((key, value) {
       String socketId = getSocket().id!;
@@ -168,15 +182,15 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
         if (isSpectator ||
             ((positionX - player.positionX).abs() < 2 &&
                 (positionY - player.positionY).abs() < 2)) {
-          socketIdToEnemy[socketId] = Enemy(
+          enemies.add(Enemy(
               mazeHelper: mazeHelper,
               positionX: positionX,
-              positionY: positionY);
+              positionY: positionY));
         }
       }
     });
 
-    addAll(socketIdToEnemy.values.toList());
+    addAll(enemies);
   }
 
   void drawDangerZones() {
@@ -283,10 +297,20 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     addAll(pickups);
   }
 
-  void drawEarthquakes(String socketId) {
-    if (socketIdToEnemy.keys.contains(socketId)) {
-      socketIdToEnemy[socketId]!.showEarthquake();
-    }
+  void drawEarthquake(String socketId) {
+    var location = Handler.locations[socketId];
+    Earthquake earthquake = Earthquake(
+      mazeHelper: mazeHelper,
+      positionX: location[0],
+      positionY: location[1],
+    );
+    earthquake.add(ScaleEffect.to(
+      Vector2.zero(),
+      EffectController(duration: EARTHQUAKE_ANIMATION_DURATION),
+    ));
+    earthquake
+        .add(RemoveEffect(delay: EARTHQUAKE_COOLDOWN_MILLISECONDS.toDouble()));
+    add(earthquake);
   }
 
   @override
@@ -304,7 +328,6 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     );
 
     Handler.shrink(startShrinkCountdown);
-    Handler.listenEarthquake(drawEarthquakes);
 
     if (isSpectator) {
       drawAllWalls();
@@ -312,7 +335,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
     }
 
-    // Handler.listenEarthquake(earthquake);
+    Handler.listenEarthquake(drawEarthquake);
     // earthquake is a draw enemy earthquake function that takes in 1 parameter
     // earthquake(socketId){
     //  var location = Handler.locations[socketId];
