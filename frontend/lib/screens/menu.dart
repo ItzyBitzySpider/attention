@@ -119,14 +119,6 @@ class _MenuState extends State<Menu> {
     return MenuButton(
       buttonText: 'New Game',
       backgroundColor: const Color(NEW_GAME_BUTTON_COLOR),
-      onPressed: () => setState(() => newGameSelected = true),
-    );
-  }
-
-  Widget pvpGamemodeButton() {
-    return MenuButton(
-      buttonText: 'PVP',
-      backgroundColor: const Color(PVP_BUTTON_COLOR),
       onPressed: () => Navigator.push(
         context,
         MaterialPageRoute(
@@ -134,6 +126,13 @@ class _MenuState extends State<Menu> {
         ),
       ),
     );
+  }
+
+  Widget pvpGamemodeButton() {
+    return MenuButton(
+        buttonText: 'PVP',
+        backgroundColor: const Color(PVP_BUTTON_COLOR),
+        onPressed: () {});
   }
 
   Widget escapeGamemodeButton() {

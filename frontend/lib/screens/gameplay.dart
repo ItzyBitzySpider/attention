@@ -143,10 +143,11 @@ class _GameplayState extends State<Gameplay> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
               MenuButton(
+                width: 200,
                 buttonText: 'Return to Home',
-                backgroundColor: const Color(SPECTATE_BUTTON_COLOR),
+                backgroundColor: const Color(RETURN_BUTTON_COLOR),
                 onPressed: () {
                   Navigator.push(
                     context,
