@@ -23,7 +23,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
 
   late Player player;
   List<Wall> mazeWalls = [];
-  List<Enemy> enemies = [];
+  Map<String, Enemy> socketIdToEnemy = {};
   List<Pickup> pickups = [];
   List<DangerZone> dangerZones = [];
 
@@ -156,26 +156,27 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   }
 
   void drawEnemies() {
-    removeAll(enemies);
-    enemies = [];
+    removeAll(socketIdToEnemy.values.toList());
+    socketIdToEnemy = {};
 
     Handler.locations.forEach((key, value) {
-      if (getSocket().id != key) {
+      String socketId = getSocket().id!;
+      if (socketId != key) {
         int positionX = value[0];
         int positionY = value[1];
 
         if (isSpectator ||
             ((positionX - player.positionX).abs() < 2 &&
                 (positionY - player.positionY).abs() < 2)) {
-          enemies.add(Enemy(
+          socketIdToEnemy[socketId] = Enemy(
               mazeHelper: mazeHelper,
               positionX: positionX,
-              positionY: positionY));
+              positionY: positionY);
         }
       }
     });
 
-    addAll(enemies);
+    addAll(socketIdToEnemy.values.toList());
   }
 
   void drawDangerZones() {
@@ -282,6 +283,12 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     addAll(pickups);
   }
 
+  void drawEarthquakes(String socketId) {
+    if (socketIdToEnemy.keys.contains(socketId)) {
+      socketIdToEnemy[socketId]!.showEarthquake();
+    }
+  }
+
   @override
   Future<void> onLoad() async {
     await Future.delayed(const Duration(seconds: 1));
@@ -297,12 +304,14 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     );
 
     Handler.shrink(startShrinkCountdown);
+    Handler.listenEarthquake(drawEarthquakes);
 
     if (isSpectator) {
       drawAllWalls();
     } else {
       spawnPlayer(Handler.ownLocation[0], Handler.ownLocation[1]);
     }
+
     // Handler.listenEarthquake(earthquake);
     // earthquake is a draw enemy earthquake function that takes in 1 parameter
     // earthquake(socketId){

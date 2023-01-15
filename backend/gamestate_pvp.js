@@ -198,14 +198,17 @@ export class PVPGameState extends GameState {
       //Cooldown handling
       if (serverTicks < this.cooldown[socketId]) return;
 
-      // const locations = this.stateCache.filter(
-      //   (v) => Math.abs(v.serverTicks - serverTicks) < 2
-      // )[0].locations;
+      const locations = this.stateCache.filter(
+        (v) => v.serverTicks === serverTicks
+      )[0].locations;
 
       global.io.to(this.roomId).emit("earthquake", socketId);
 
-      const [x, y] = this.locations[socketId];
-      Object.entries(this.locations).forEach(([oppSocketId, [oppX, oppY]]) => {
+      if (!locations[socketId])
+        console.warn("No state cache found", serverTicks, this.stateCache);
+
+      const [x, y] = locations[socketId] ?? this.locations[socketId];
+      Object.entries(locations).forEach(([oppSocketId, [oppX, oppY]]) => {
         if (oppSocketId === socketId) return;
         if (Math.abs(x - oppX) > 1) return;
         if (Math.abs(y - oppY) > 1) return;

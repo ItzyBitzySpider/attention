@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 // ignore: constant_identifier_names
 const int EARTHQUAKE_COOLDOWN_MILLISECONDS = 1000;
 // ignore: constant_identifier_names
-const double EARTHQUAKE_ANIMATION_DURATION = 0.8;
+const double EARTHQUAKE_ANIMATION_DURATION = 0.45;
 
 class Player extends SpriteComponent with HasGameRef, KeyboardHandler {
   MazeHelper mazeHelper;
