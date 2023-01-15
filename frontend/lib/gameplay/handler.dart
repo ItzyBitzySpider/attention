@@ -119,7 +119,7 @@ class Handler {
     }
   }
 
-  static void pvp(hitPlayer, updatePlayersLeft, updateLives) {
+  static void pvp(hitPlayer, updatePlayersLeft, updateLives, gameEnd) {
     socket.on('hearts', (data) {
       print(data);
       hearts = data;
@@ -132,6 +132,10 @@ class Handler {
       playersLeft = data['playersLeft'];
       updateLives(_tmplives[socket.id]);
       updatePlayersLeft(data['playersLeft']);
+    });
+
+    socket.on('gameEnd', (data) {
+      gameEnd();
     });
 
     // socket.on('hit', hitPlayer);
