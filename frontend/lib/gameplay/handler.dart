@@ -8,6 +8,7 @@ import '../utils/sockets.dart';
 class Handler {
   static String roomId = '';
   static Socket socket = getSocket();
+  static bool isSpectator = false;
   static int packetsSent = 0;
   static List<dynamic> maze = [];
 
@@ -76,12 +77,12 @@ class Handler {
     socket.emitWithAck('startGame', roomId, ack: (data) {});
   }
 
-  static void setSpectator(isSpectator) {
+  static void setSpectator(isSpectatorView) {
     Map<String, dynamic> packet = {
       'roomId': roomId,
-      'isSpectator': isSpectator
+      'isSpectator': isSpectatorView
     };
-
+    isSpectator = isSpectatorView
     socket.emit('setSpectator', packet);
   }
 
