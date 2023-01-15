@@ -94,54 +94,50 @@ export class PVPGameState extends GameState {
   updatePositions() {
     super.updatePositions();
 
-    if (
-      this.NEXT_TIME_SHRINK_MS === FIRST_DELAY_MS &&
-      this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
-    ) {
-      console.log("Timing first shrink", this.NEXT_TIME_SHRINK_MS);
-      global.io
-        .to(this.roomId)
-        .emit("shrinkMaze", [
-          FIRST_SHRINK_MS - FIRST_DELAY_MS,
-          this.maze.vert.length - this.shrinkValue,
-        ]);
-      this.incrementTimeShrink(FIRST_SHRINK_MS - FIRST_DELAY_MS);
-    } else if (
-      this.shrinkValue < 7 &&
-      this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP
-    ) {
-      console.log("Real shrink", this.shrinkValue, this.NEXT_TIME_SHRINK_MS);
-      this.shrinkValue++;
-      global.io
-        .to(this.roomId)
-        .emit("shrinkMaze", [
-          TIME_SHRINK_MS,
-          this.maze.vert.length - this.shrinkValue,
-        ]);
+    if (this.serverTicks >= this.NEXT_TIME_SHRINK_LOOP) {
+      if (this.NEXT_TIME_SHRINK_MS === FIRST_DELAY_MS) {
+        console.log("Timing first shrink", this.NEXT_TIME_SHRINK_MS);
+        global.io
+          .to(this.roomId)
+          .emit("shrinkMaze", [
+            FIRST_SHRINK_MS - FIRST_DELAY_MS,
+            this.maze.vert.length - this.shrinkValue,
+          ]);
+        this.incrementTimeShrink(FIRST_SHRINK_MS - FIRST_DELAY_MS);
+      } else if (this.shrinkValue < 7) {
+        console.log("Real shrink", this.shrinkValue, this.NEXT_TIME_SHRINK_MS);
+        this.shrinkValue++;
+        global.io
+          .to(this.roomId)
+          .emit("shrinkMaze", [
+            TIME_SHRINK_MS,
+            this.maze.vert.length - this.shrinkValue,
+          ]);
 
-      Object.entries(this.locations).forEach(([socketId, [x, y]]) => {
-        if (
-          x < this.shrinkValue ||
-          x > this.maze.vert.length - 1 - this.shrinkValue
-        ) {
-          this.lives[socketId] = 0;
-          console.log(
-            `${socketId} killed by shrink (x ${x} ${this.shrinkValue} ${this.maze.vert.length})`
-          );
-          this.changedLives = true;
-        }
-        if (
-          y < this.shrinkValue ||
-          y > this.maze.vert.length - 1 - this.shrinkValue
-        ) {
-          this.lives[socketId] = 0;
-          console.log(
-            `${socketId} killed by shrink (y ${y} ${this.shrinkValue} ${this.maze.vert.length})`
-          );
-          this.changedLives = true;
-        }
-      });
-      this.incrementTimeShrink(TIME_SHRINK_MS);
+        Object.entries(this.locations).forEach(([socketId, [x, y]]) => {
+          if (
+            x < this.shrinkValue ||
+            x > this.maze.vert.length - 1 - this.shrinkValue
+          ) {
+            this.lives[socketId] = 0;
+            console.log(
+              `${socketId} killed by shrink (x ${x} ${this.shrinkValue} ${this.maze.vert.length})`
+            );
+            this.changedLives = true;
+          }
+          if (
+            y < this.shrinkValue ||
+            y > this.maze.vert.length - 1 - this.shrinkValue
+          ) {
+            this.lives[socketId] = 0;
+            console.log(
+              `${socketId} killed by shrink (y ${y} ${this.shrinkValue} ${this.maze.vert.length})`
+            );
+            this.changedLives = true;
+          }
+        });
+        this.incrementTimeShrink(TIME_SHRINK_MS);
+      }
     }
 
     if (this.changedLives) {
