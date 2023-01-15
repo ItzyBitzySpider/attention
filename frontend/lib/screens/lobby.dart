@@ -57,7 +57,10 @@ class _LobbyState extends State<Lobby> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Gameplay(gamemode: playerMode),
+          builder: (context) => Gameplay(
+            gamemode: widget.gamemode,
+            newGamemode: playerMode,
+          ),
         ),
       );
     });
@@ -73,7 +76,10 @@ class _LobbyState extends State<Lobby> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Gameplay(gamemode: widget.gamemode),
+          builder: (context) => Gameplay(
+            gamemode: widget.gamemode,
+            newGamemode: playerMode,
+          ),
         ),
       );
     }

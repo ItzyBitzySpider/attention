@@ -82,7 +82,7 @@ class Handler {
       'roomId': roomId,
       'isSpectator': isSpectatorView
     };
-    isSpectator = isSpectatorView
+    isSpectator = isSpectatorView;
     socket.emit('setSpectator', packet);
   }
 

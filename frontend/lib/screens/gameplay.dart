@@ -12,8 +12,13 @@ late Function(int) globalUpdateTimeLeft;
 
 class Gameplay extends StatefulWidget {
   final GameMode gamemode;
+  final GameMode newGamemode;
 
-  const Gameplay({super.key, required this.gamemode});
+  const Gameplay({
+    super.key,
+    required this.gamemode,
+    required this.newGamemode,
+  });
 
   @override
   State<Gameplay> createState() => _GameplayState();
@@ -47,7 +52,7 @@ class _GameplayState extends State<Gameplay> {
 
   @override
   void initState() {
-    Handler.startGameLoop(false);
+    Handler.startGameLoop(widget.newGamemode == GameMode.spectator);
     Handler.pvp(() {}, updatePlayersLeft, updateLivesLeft);
 
     globalUpdateTimeLeft = updateTimeLeft;
