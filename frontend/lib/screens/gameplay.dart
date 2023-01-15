@@ -76,10 +76,11 @@ class _GameplayState extends State<Gameplay> {
           Text(
             label,
             style: const TextStyle(
-              fontSize: DETAIL_TEXT_HEADER_SIZE,
+              fontSize: 35,
               fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(height: 10.0),
           SelectableText(
             value,
             style: const TextStyle(
@@ -99,8 +100,8 @@ class _GameplayState extends State<Gameplay> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: widget.gamemode == GameMode.pvp
-          ? [detailText('Lives Left:', lives.toString())]
-          : [detailText('Keys Found:', '$keys/$totalKeys')],
+          ? [detailText('Lives Left', lives.toString())]
+          : [detailText('Keys Found', '$keys/$totalKeys')],
     );
   }
 
@@ -118,9 +119,9 @@ class _GameplayState extends State<Gameplay> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        detailText('Players Left:', playersLeft.toString()),
-        const SizedBox(height: 40),
-        detailText('Maze Shrinks in:', formatDuration(mazeShrinkTimeSeconds)),
+        detailText('Players Left', playersLeft.toString()),
+        const SizedBox(height: 80),
+        detailText('Maze Shrinks in', formatDuration(mazeShrinkTimeSeconds)),
       ],
     );
   }

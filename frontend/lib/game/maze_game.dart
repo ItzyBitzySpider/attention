@@ -17,6 +17,9 @@ import 'package:flutter/material.dart';
 import '../gameplay/handler.dart';
 import '../utils/sockets.dart';
 
+// ignore: constant_identifier_names
+const int DANGER_ZONE_SPEED = 20;
+
 class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   late MazeHelper mazeHelper;
   late bool isSpectator;
@@ -214,7 +217,7 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
             positionX: x,
             positionY: y,
             colorCode: RED_BORDER_COLORS[
-                frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+                frameCounter ~/ DANGER_ZONE_SPEED % RED_BORDER_COLORS.length],
           ));
         }
       }
@@ -226,58 +229,42 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   void drawAllDangerZones() {
     int opposite = mazeHelper.positionMax - shrinkExtent - 1;
     for (int i = shrinkExtent; i < opposite + 1; i++) {
-      dangerZones.add(DangerZone(
-        mazeHelper: mazeHelper,
-        positionX: i,
-        positionY: shrinkExtent,
-        colorCode:
-            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
-      ));
-      dangerZones.add(DangerZone(
-        mazeHelper: mazeHelper,
-        positionX: i,
-        positionY: opposite,
-        colorCode:
-            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
-      ));
+      if (i != shrinkExtent && i != opposite) {
+        dangerZones.add(DangerZone(
+          mazeHelper: mazeHelper,
+          positionX: i,
+          positionY: shrinkExtent,
+          colorCode: RED_BORDER_COLORS[
+              frameCounter ~/ DANGER_ZONE_SPEED % RED_BORDER_COLORS.length],
+        ));
+
+        dangerZones.add(DangerZone(
+          mazeHelper: mazeHelper,
+          positionX: i,
+          positionY: opposite,
+          colorCode: RED_BORDER_COLORS[
+              frameCounter ~/ DANGER_ZONE_SPEED % RED_BORDER_COLORS.length],
+        ));
+      }
+
       dangerZones.add(DangerZone(
         mazeHelper: mazeHelper,
         positionX: shrinkExtent,
         positionY: i,
-        colorCode:
-            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+        colorCode: RED_BORDER_COLORS[
+            frameCounter ~/ DANGER_ZONE_SPEED % RED_BORDER_COLORS.length],
       ));
       dangerZones.add(DangerZone(
         mazeHelper: mazeHelper,
         positionX: opposite,
         positionY: i,
-        colorCode:
-            RED_BORDER_COLORS[frameCounter ~/ 15 % RED_BORDER_COLORS.length],
+        colorCode: RED_BORDER_COLORS[
+            frameCounter ~/ DANGER_ZONE_SPEED % RED_BORDER_COLORS.length],
       ));
     }
 
     addAll(dangerZones);
   }
-
-  // void drawKeys() {
-  //   removeAll(pickups);
-  //   pickups = [];
-
-  //   for (final p in Handler.keys) {
-  //     int positionX = p[0];
-  //     int positionY = p[1];
-
-  //       if ((positionX - player.positionX).abs() < 2 &&
-  //           (positionY - player.positionY).abs() < 2) {
-  //         pickups.add(KeyPickup(
-  //             mazeHelper: mazeHelper,
-  //             positionX: positionX,
-  //             positionY: positionY));
-  //       }
-  //   }
-
-  //   addAll(pickups);
-  // }
 
   void drawHearts() {
     removeAll(pickups);
@@ -286,7 +273,6 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
       int x = p[0];
       int y = p[1];
 
-      // if (isSpectator ||
       //     ((x - player.positionX).abs() < 2 &&
       //         (y - player.positionY).abs() < 2)) {
       pickups
@@ -298,6 +284,10 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
   }
 
   void drawEarthquake(String socketId) {
+    if (socketId == getSocket().id!) {
+      return;
+    }
+
     var location = Handler.locations[socketId];
     Earthquake earthquake = Earthquake(
       mazeHelper: mazeHelper,
@@ -336,11 +326,6 @@ class MazeGame extends FlameGame with HasKeyboardHandlerComponents {
     }
 
     Handler.listenEarthquake(drawEarthquake);
-    // earthquake is a draw enemy earthquake function that takes in 1 parameter
-    // earthquake(socketId){
-    //  var location = Handler.locations[socketId];
-    //  drawsomething(location[0], location[1]);
-    // }
   }
 
   void playerUpdate(double dt) {
