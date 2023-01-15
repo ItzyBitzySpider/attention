@@ -60,7 +60,7 @@ class _JoinGameButtonState extends State<JoinGameButton> {
         child: TextField(
           cursorColor: const Color(0xff808080),
           style: const TextStyle(height: 1.5, fontSize: 18),
-          onChanged: (text) => roomCode = text,
+          onChanged: (text) => roomCode = text.toUpperCase(),
           decoration: InputDecoration(
             focusedBorder: textfieldBorder,
             enabledBorder: textfieldBorder,
