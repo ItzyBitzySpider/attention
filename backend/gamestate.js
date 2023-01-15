@@ -4,7 +4,7 @@ import { Maze } from "./maze.js";
 const LOOP_FPS = 60;
 const MAX_LATENCY_MS = 1000;
 
-const ACTION_COOLDOWN_MS = 1000;
+const ACTION_COOLDOWN_MS = 450;
 
 //Derived Values
 export const MS_PER_LOOP = 1000 / LOOP_FPS;
