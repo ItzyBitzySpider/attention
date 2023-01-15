@@ -13,11 +13,13 @@ late Function(int) globalUpdateTimeLeft;
 class Gameplay extends StatefulWidget {
   final GameMode gamemode;
   final GameMode newGamemode;
+  final int playersLeft;
 
   const Gameplay({
     super.key,
     required this.gamemode,
     required this.newGamemode,
+    required this.playersLeft,
   });
 
   @override
@@ -27,7 +29,7 @@ class Gameplay extends StatefulWidget {
 class _GameplayState extends State<Gameplay> {
   int playerLeft = 0;
   bool isDead = false;
-  int playersLeft = 4;
+  late int playersLeft;
   int mazeShrinkTimeSeconds = 191;
   int lives = 3;
   bool win = false;
@@ -61,6 +63,7 @@ class _GameplayState extends State<Gameplay> {
 
   @override
   void initState() {
+    playersLeft = widget.playersLeft;
     Handler.startGameLoop(widget.newGamemode == GameMode.spectator);
     Handler.pvp(() {}, updatePlayersLeft, updateLivesLeft, gameEnd);
 
