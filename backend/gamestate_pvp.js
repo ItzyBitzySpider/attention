@@ -204,7 +204,8 @@ export class PVPGameState extends GameState {
 
       global.io.to(this.roomId).emit("earthquake", socketId);
 
-      if (!location[socketId]) console.log(serverTicks, this.stateCache);
+      if (!locations[socketId])
+        console.warn("No state cache found", serverTicks, this.stateCache);
 
       const [x, y] = locations[socketId] ?? this.locations[socketId];
       Object.entries(locations).forEach(([oppSocketId, [oppX, oppY]]) => {
