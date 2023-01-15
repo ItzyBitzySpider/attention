@@ -24,7 +24,7 @@ class MenuButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        elevation: 0.0,
+        elevation: 10.0,
         fixedSize: const Size(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT),
         backgroundColor: backgroundColor,
         shape: RoundedRectangleBorder(
@@ -33,7 +33,7 @@ class MenuButton extends StatelessWidget {
       ),
       child: Text(
         buttonText,
-        style: const TextStyle(fontSize: MENU_BUTTON_FONT_SIZE),
+        style: const TextStyle(fontSize: MENU_BUTTON_FONT_SIZE, fontWeight: FontWeight.bold),
       ),
     );
   }
